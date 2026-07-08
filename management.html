@@ -94,7 +94,7 @@
     .btn-row:hover{border-color:var(--accent);color:var(--accent);}
 
     /* Employee Master Table */
-    .emp-master-row{display:grid;grid-template-columns:1fr 110px 110px 110px 110px 110px auto;gap:8px;align-items:center;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:8px;transition:border-color .2s;}
+    .emp-master-row{display:grid;grid-template-columns:1fr 110px 110px 110px 110px auto;gap:8px;align-items:center;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:8px;transition:border-color .2s;}
     .emp-master-row:hover{border-color:var(--border);}
     .emp-master-row.row-new{border-color:rgba(78,204,163,.4);background:rgba(78,204,163,.05);}
     .emp-master-row.row-edited{border-color:rgba(240,160,64,.4);background:rgba(240,160,64,.05);}
@@ -155,7 +155,7 @@
     @media(max-width:700px){
       .form-row{grid-template-columns:1fr;}
       .header-title{font-size:1.5rem;}
-      .emp-master-row{grid-template-columns:1fr 90px 90px 90px 90px 90px auto;gap:5px;}
+      .emp-master-row{grid-template-columns:1fr 90px 90px 90px 90px auto;gap:5px;}
     }
     @media(max-width:520px){
       .emp-master-row{grid-template-columns:1fr 1fr;row-gap:8px;}
@@ -258,13 +258,12 @@
         <span id="emp-save-status" style="font-size:.75rem;color:var(--muted);"></span>
       </div>
 
-      <div style="display:grid;grid-template-columns:1fr 110px 110px 110px 110px 110px auto;gap:8px;padding:0 14px 8px;font-size:.64rem;color:var(--muted);letter-spacing:.06em;">
+      <div style="display:grid;grid-template-columns:1fr 110px 110px 110px 110px auto;gap:8px;padding:0 14px 8px;font-size:.64rem;color:var(--muted);letter-spacing:.06em;">
         <div>氏名</div>
         <div style="text-align:center;">基本時給<br>（円）</div>
         <div style="text-align:center;">深夜手当<br>（円/時）</div>
         <div style="text-align:center;">土日祝手当<br>（円/時）</div>
         <div style="text-align:center;">土日祝深夜<br>（円/時）</div>
-        <div style="text-align:center;">交通費<br>（円/日）</div>
         <div></div>
       </div>
 
@@ -419,10 +418,6 @@
       <div class="form-group">
         <label class="form-label">土日祝深夜（円/時）<br><span style="font-weight:400;font-size:.68rem;">休日深夜 +60%</span></label>
         <input type="number" class="form-input" id="new-emp-hnight" min="0" step="1" placeholder="自動入力" />
-      </div>
-      <div class="form-group">
-        <label class="form-label">交通費（円/日）<br><span style="font-weight:400;font-size:.68rem;">0円の場合は交通費なし</span></label>
-        <input type="number" class="form-input" id="new-emp-transport" min="0" step="10" placeholder="0" />
       </div>
     </div>
     <div class="modal-footer">
@@ -758,12 +753,11 @@ function renderEmpMaster() {
       <div><div class="emp-input-label" id="hint-night-${e.id}"></div><input type="number" class="emp-num-input" data-field="nightAllowance" value="${e.nightAllowance||0}" oninput="markEmpChanged(${e.id})" /></div>
       <div><div class="emp-input-label" id="hint-holiday-${e.id}"></div><input type="number" class="emp-num-input" data-field="holidayAllowance" value="${e.holidayAllowance||0}" oninput="markEmpChanged(${e.id})" /></div>
       <div><div class="emp-input-label" id="hint-hnight-${e.id}"></div><input type="number" class="emp-num-input" data-field="holidayNightAllowance" value="${e.holidayNightAllowance||0}" oninput="markEmpChanged(${e.id})" /></div>
-      <div><input type="number" class="emp-num-input" data-field="transportFee" value="${e.transportFee||0}" min="0" step="10" oninput="markEmpChanged(${e.id})" /></div>
       <div style="text-align:right;"><button class="emp-del-btn" onclick="deleteEmpLocally(${e.id})">削除</button></div></div>`;
   }).join('');
   masterEmployees.forEach(e=>showAutoHint(e.id,e.wage));
 }
-function openEmpModal(){document.getElementById('new-emp-name').value='';document.getElementById('new-emp-wage').value='';document.getElementById('new-emp-night').value='';document.getElementById('new-emp-holiday').value='';document.getElementById('new-emp-hnight').value='';document.getElementById('new-emp-transport').value='0';document.getElementById('emp-modal').classList.remove('hidden');}
+function openEmpModal(){document.getElementById('new-emp-name').value='';document.getElementById('new-emp-wage').value='';document.getElementById('new-emp-night').value='';document.getElementById('new-emp-holiday').value='';document.getElementById('new-emp-hnight').value='';document.getElementById('emp-modal').classList.remove('hidden');}
 function closeEmpModal(e){if(e&&e.target!==document.getElementById('emp-modal'))return;document.getElementById('emp-modal').classList.add('hidden');}
 function autoCalcModalAllowances(val) {
   const wage = Math.floor(Number(val)) || 0;
@@ -790,7 +784,6 @@ function markEmpChanged(id){
   emp.nightAllowance = Number(row.querySelector('[data-field="nightAllowance"]').value)||0;
   emp.holidayAllowance = Number(row.querySelector('[data-field="holidayAllowance"]').value)||0;
   emp.holidayNightAllowance= Number(row.querySelector('[data-field="holidayNightAllowance"]').value)||0;
-  emp.transportFee = Number(row.querySelector('[data-field="transportFee"]').value)||0;
   empPendingChanges=empPendingChanges.filter(c=>!(c.action==='upsert'&&String(c.emp.id)===String(id)));
   empPendingChanges.push({action:'upsert',emp:{...emp}}); document.getElementById('btn-save-emps').disabled=false; showAutoHint(id, emp.wage);
 }
@@ -806,10 +799,9 @@ function deleteEmpLocally(id){
 function addNewEmployee(){
   const name=document.getElementById('new-emp-name').value.trim(), wage=Number(document.getElementById('new-emp-wage').value)||0;
   const night=Number(document.getElementById('new-emp-night').value)||Math.floor(wage*1.25), holiday=Number(document.getElementById('new-emp-holiday').value)||Math.floor(wage*1.35), hnight=Number(document.getElementById('new-emp-hnight').value)||Math.floor(wage*1.60);
-  const transport=Number(document.getElementById('new-emp-transport').value)||0;
   if(!name){showToast('⚠️ 氏名を入力してください','error');return;}
   if(masterEmployees.some(e=>e.name===name)){showToast('⚠️ 既に同名の従業員が登録されています','error');return;}
-  const newEmp={id:Date.now(),name,wage,nightAllowance:night,holidayAllowance:holiday,holidayNightAllowance:hnight,transportFee:transport,_isNew:true};
+  const newEmp={id:Date.now(),name,wage,nightAllowance:night,holidayAllowance:holiday,holidayNightAllowance:hnight,_isNew:true};
   masterEmployees.push(newEmp); empPendingChanges.push({action:'upsert',emp:newEmp});
   document.getElementById('emp-modal').classList.add('hidden'); renderEmpMaster(); document.getElementById('btn-save-emps').disabled=false; showToast(`✅ ${name}を追加しました。保存をお忘れなく`,'success');
 }
@@ -858,7 +850,6 @@ async function fetchPayrollData() {
         nightAllowance: e.nightAllowance || 0,
         holidayAllowance: e.holidayAllowance || 0,
         holidayNightAllowance: e.holidayNightAllowance || 0,
-        transportFee: e.transportFee || 0,
       };
     });
     document.getElementById('pay-fetch-prog').style.width = '65%';
@@ -1087,7 +1078,7 @@ function calcPayroll() {
   });
 
   payrollResults = Object.values(emps).map(e => {
-    const cfg = payEmpMap[e.name] || { wage: 0, nightAllowance: 0, holidayAllowance: 0, holidayNightAllowance: 0, transportFee: 0 };
+    const cfg = payEmpMap[e.name] || { wage: 0, nightAllowance: 0, holidayAllowance: 0, holidayNightAllowance: 0 };
     const days = e.uniqueDays.size;
 
     const basePay         = Math.round(cfg.wage * e.normalMin / 60);
@@ -1096,19 +1087,17 @@ function calcPayroll() {
     const holidayNightPay = Math.round(cfg.holidayNightAllowance * e.holidayNightMin / 60);
 
     const wageTotal = basePay + nightPay + holidayPay + holidayNightPay;
-    // 個人別交通費が設定されていればそれを使用、0円の場合は共通設定（STEP2）を適用
-    const empTransportFee = cfg.transportFee > 0 ? cfg.transportFee : transportFee;
-    const transport = empTransportFee * days;
-    const totalPayRaw = wageTotal + transport;
-    const totalPay = Math.floor(totalPayRaw / 10) * 10; // 10円位以下切り捨て
+    const transport = transportFee * days;
+    const totalPay  = wageTotal + transport;
 
     const sortedDetails = [...e.details].sort((a, b) => (a.date||'').localeCompare(b.date||''));
     sortedDetails.forEach(d => {
-      d.transport = empTransportFee;
+      // splitされたシフトが含まれるためcheckInでのソートはしないか、空白を考慮したソートにする
+      d.transport = transportFee;
       d.dayTotal = d.totalPay + d.transport;
     });
 
-    return { ...e, days, cfg, basePay, nightPay, holidayPay, holidayNightPay, wageTotal, transport, totalPay, empTransportFee, details: sortedDetails };
+    return { ...e, days, cfg, basePay, nightPay, holidayPay, holidayNightPay, wageTotal, transport, totalPay, details: sortedDetails };
   }).sort((a, b) => a.name.localeCompare(b.name));
 
   const total = payrollResults.reduce((s, r) => s + r.totalPay, 0);
@@ -1200,47 +1189,32 @@ function downloadPayCSV() {
   if (!payrollResults.length) return;
   const from = document.getElementById('pay-from').value, to = document.getElementById('pay-to').value;
   const fee = document.getElementById('transport-fee').value;
+  const hdrs = [
+    '従業員名','出勤日数','総労働時間(分)','通常時間(分)','深夜時間(分)','土日祝時間(分)','土日祝深夜(分)',
+    '基本給(円)','深夜手当(円)','土日祝手当(円)','土日祝深夜手当(円)','給与小計(円)','交通費(円)','支給総額(円)'
+  ].join(',');
 
-  const lines = [];
+  const rows = payrollResults.map(r => [
+    r.name, r.days, r.totalMin, r.normalMin, r.nightMin, r.holidayMin, r.holidayNightMin,
+    r.basePay, r.nightPay, r.holidayPay, r.holidayNightPay,
+    r.wageTotal, r.transport, r.totalPay
+  ].join(','));
+
   const fromYear = Number(from.substring(0,4)), toYear = Number(to.substring(0,4));
+  const holidayLines = [];
   for (let y = fromYear; y <= toYear; y++) {
-    const hdays = holidayCache[y] ? [...holidayCache[y]].sort().join(' ') : '-';
-    lines.push(`# ${y}年 祝日: ${hdays}`);
+    const days = holidayCache[y] ? [...holidayCache[y]].sort().join(' ') : '-';
+    holidayLines.push(`# ${y}年 祝日: ${days}`);
   }
-  lines.unshift(`# 共通交通費デフォルト: ${fee}円/日`);
-  lines.unshift(`# 給与計算結果 ${from}〜${to}`);
-  lines.push('');
 
-  // ── サマリーセクション
-  lines.push('## 給与サマリー');
-  lines.push(['種別','従業員名','出勤日数','総労働時間(分)','通常時間(分)','深夜時間(分)','土日祝時間(分)','土日祝深夜(分)',
-    '基本給(円)','深夜手当(円)','土日祝手当(円)','土日祝深夜手当(円)','給与小計(円)','交通費単価(円/日)','交通費合計(円)','支給総額(円)'].join(','));
-  payrollResults.forEach(r => {
-    lines.push(['サマリー',r.name,r.days,r.totalMin,r.normalMin,r.nightMin,r.holidayMin,r.holidayNightMin,
-      r.basePay,r.nightPay,r.holidayPay,r.holidayNightPay,r.wageTotal,r.empTransportFee,r.transport,r.totalPay].join(','));
-  });
-  lines.push('');
+  const csv = '\uFEFF' + [
+    `# 給与計算結果 ${from}〜${to}`,
+    `# 交通費単価: ${fee}円/日`,
+    ...holidayLines,
+    hdrs,
+    ...rows
+  ].join('\n');
 
-  // ── 日別詳細セクション
-  lines.push('## 日別勤怠内訳');
-  lines.push(['種別','従業員名','日付','祝日','勤務種別','出勤(丸め)','退勤(丸め)','出勤(実打刻)','退勤(実打刻)',
-    '勤務時間(分)','区分','時給(円)','給与(円)','交通費(円)','日額合計(円)'].join(','));
-  payrollResults.forEach(r => {
-    r.details.forEach(d => {
-      d.shifts.forEach((s, si) => {
-        const checkInRec  = payRecords.find(p => p.employeeName===r.name && p.punchType==='出勤' && p.shift===s.shift && (p.date||(p.punchTime||'').substring(0,10))===d.date);
-        const checkOutRec = payRecords.find(p => p.employeeName===r.name && p.punchType==='退勤' && p.shift===s.shift && (p.date||(p.punchTime||'').substring(0,10))===d.date);
-        const rawIn  = checkInRec  ? fmtTimeOnly(checkInRec.punchTimeRaw)  : '—';
-        const rawOut = checkOutRec ? fmtTimeOnly(checkOutRec.punchTimeRaw) : '—';
-        lines.push(['日別',r.name,d.date,d.isHoliday?'休日':'',s.shift,
-          fmtTimeOnly(s.checkIn),fmtTimeOnly(s.checkOut),rawIn,rawOut,
-          s.minutes,s.category,s.rate,s.pay,
-          si===0?d.transport:0, si===0?d.dayTotal:''].join(','));
-      });
-    });
-  });
-
-  const csv = '\uFEFF' + lines.join('\n');
   const a = Object.assign(document.createElement('a'), {
     href: URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' })),
     download: `給与計算_${from}_${to}.csv`
