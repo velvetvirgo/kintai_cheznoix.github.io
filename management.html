@@ -15,173 +15,429 @@
       --text:     #d4efe6; --muted:    #5a8a76; --radius:   14px;
       --shadow:   0 8px 32px rgba(0,0,0,0.5);
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Noto Sans JP', sans-serif; }
-    body { background: var(--bg); color: var(--text); padding: 20px; min-height: 100vh; padding-bottom: 60px; }
-    header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
-    h1 { font-family: 'Josefin Sans', sans-serif; font-size: 24px; color: var(--accent); letter-spacing: 1px; }
-    
-    .nav-tabs { display: flex; gap: 8px; margin-bottom: 20px; border-bottom: 2px solid var(--border); padding-bottom: 2px; }
-    .tab-btn { background: none; border: none; color: var(--muted); padding: 8px 16px; font-size: 15px; font-weight: 500; cursor: pointer; border-radius: 8px 8px 0 0; transition: all 0.2s; }
-    .tab-btn:hover { color: var(--text); background: var(--surface); }
-    .tab-btn.active { color: var(--accent); background: var(--surface2); border-bottom: 2px solid var(--accent); margin-bottom: -4px; }
-    
-    .tab-content { display: none; }
-    .tab-content.active { display: block; animation: fadeIn 0.3s ease; }
-    @keyframes fadeIn { from { opacity:0; transform:translateY(4px); } to { opacity:1; transform:translateY(0); } }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text);min-height:100dvh;overflow-x:hidden;}
+    body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(ellipse 70% 50% at 10% 0%,rgba(78,204,163,.10) 0%,transparent 60%),radial-gradient(ellipse 50% 40% at 90% 90%,rgba(240,192,96,.06) 0%,transparent 50%);}
+    #app{position:relative;z-index:1;max-width:1000px;margin:0 auto;padding:28px 20px 80px;}
 
-    .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin-bottom: 20px; box-shadow: var(--shadow); }
-    .card-title { font-size: 16px; font-weight: 700; margin-bottom: 16px; color: var(--gold); display: flex; align-items: center; gap: 8px; }
+    header{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:32px;gap:16px;flex-wrap:wrap;}
+    .header-title{font-family:'Josefin Sans',sans-serif;font-size:2rem;font-weight:700;letter-spacing:.1em;color:var(--accent);line-height:1;}
+    .header-sub{font-size:.72rem;color:var(--muted);letter-spacing:.14em;text-transform:uppercase;margin-top:4px;}
+    .header-nav a{font-family:'Josefin Sans',sans-serif;font-size:.8rem;letter-spacing:.1em;color:var(--muted);text-decoration:none;border:1px solid var(--border);padding:8px 16px;border-radius:8px;transition:all .2s;}
+    .header-nav a:hover{color:var(--accent);border-color:var(--accent);}
+
+    .tabs{display:flex;gap:4px;margin-bottom:28px;background:var(--surface);border-radius:12px;padding:4px;}
+    .tab-btn{flex:1;padding:11px 10px;border:none;border-radius:9px;cursor:pointer;font-family:'Josefin Sans',sans-serif;font-size:.78rem;font-weight:600;letter-spacing:.06em;color:var(--muted);background:transparent;transition:all .25s;-webkit-tap-highlight-color:transparent;}
+    .tab-btn.active{background:var(--surface2);color:var(--accent);box-shadow:0 2px 12px rgba(0,0,0,.3);}
+    .tab-panel{display:none;animation:fadeUp .3s ease both;}
+    .tab-panel.active{display:block;}
+
+    .sec-label{font-family:'Josefin Sans',sans-serif;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;padding-left:2px;}
+    .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:20px;box-shadow:var(--shadow);}
+
+    .btn{border:none;border-radius:9px;padding:10px 20px;cursor:pointer;font-family:'Josefin Sans',sans-serif;font-size:.82rem;font-weight:600;letter-spacing:.06em;transition:all .2s;-webkit-tap-highlight-color:transparent;white-space:nowrap;}
+    .btn-primary{background:linear-gradient(135deg,var(--accent2),var(--accent));color:var(--bg);}
+    .btn-primary:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 4px 16px rgba(78,204,163,.3);}
+    .btn-danger{background:rgba(224,92,106,.15);color:var(--red);border:1px solid rgba(224,92,106,.3);}
+    .btn-danger:hover:not(:disabled){background:rgba(224,92,106,.25);}
+    .btn-amber{background:rgba(240,160,64,.15);color:var(--amber);border:1px solid rgba(240,160,64,.3);}
+    .btn-amber:hover:not(:disabled){background:rgba(240,160,64,.25);}
+    .btn-outline{background:transparent;color:var(--accent);border:1px solid var(--accent);}
+    .btn-outline:hover:not(:disabled){background:rgba(78,204,163,.08);}
+    .btn-gold{background:linear-gradient(135deg,#c89030,var(--gold));color:#1a1000;font-weight:700;}
+    .btn-gold:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 4px 16px rgba(240,192,96,.3);}
+    .btn:disabled{opacity:.4;cursor:not-allowed;transform:none!important;}
+
+    .gas-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+    .gas-input{flex:1;min-width:220px;background:var(--surface2);border:1px solid var(--border);border-radius:9px;padding:10px 14px;color:var(--text);font-family:'DM Mono',monospace;font-size:.8rem;outline:none;transition:border-color .2s;}
+    .gas-input:focus{border-color:var(--accent);}
+    .gas-input::placeholder{color:var(--muted);}
+
+    .date-range{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+    .date-input{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:9px 12px;color:var(--text);font-family:'DM Mono',monospace;font-size:.82rem;outline:none;transition:border-color .2s;}
+    .date-input:focus{border-color:var(--accent);}
+
+    .toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:14px;}
+    .filter-select{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:8px 12px;color:var(--text);font-family:'Noto Sans JP',sans-serif;font-size:.82rem;outline:none;cursor:pointer;}
+    .filter-select:focus{border-color:var(--accent);}
+
+    .change-bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:rgba(240,160,64,.08);border:1px solid rgba(240,160,64,.25);border-radius:10px;padding:10px 14px;margin-bottom:14px;}
+    .change-count{font-family:'DM Mono',monospace;font-size:.9rem;color:var(--amber);font-weight:500;}
+
+    .stats-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px;}
+    .stat-box{flex:1;min-width:110px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
+    .stat-label{font-size:.68rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;}
+    .stat-value{font-family:'DM Mono',monospace;font-size:1.4rem;color:var(--accent);margin-top:4px;font-weight:500;}
+
+    .tbl-wrap{overflow-x:auto;border-radius:10px;}
+    table{width:100%;border-collapse:collapse;font-size:.8rem;}
+    .pay-summary-row:hover{background:rgba(255,255,255,.03);}
+    thead tr{background:var(--surface2);}
+    th{padding:10px 12px;text-align:left;color:var(--muted);font-weight:500;letter-spacing:.06em;font-size:.7rem;text-transform:uppercase;white-space:nowrap;}
+    td{padding:9px 12px;border-top:1px solid var(--border);white-space:nowrap;}
+    tr:hover td{background:rgba(255,255,255,.02);}
+    tr.row-new td{background:rgba(78,204,163,.05);}
+    tr.row-edited td{background:rgba(240,160,64,.05);}
+    .check-col{width:36px;text-align:center;}
+    input[type=checkbox]{accent-color:var(--accent);width:15px;height:15px;cursor:pointer;}
+    .badge{display:inline-block;padding:3px 8px;border-radius:20px;font-size:.68rem;font-weight:700;}
+    .badge-day{background:rgba(78,204,163,.15);color:var(--accent);}
+    .badge-night{background:rgba(123,140,222,.15);color:#8b9de8;}
+    .badge-in{background:rgba(86,201,135,.15);color:#56c987;}
+    .badge-out{background:rgba(224,92,106,.15);color:var(--red);}
+    .badge-dur{background:rgba(240,192,96,.12);color:var(--gold);font-family:'DM Mono',monospace;}
+    .badge-new{background:rgba(78,204,163,.2);color:var(--accent);font-size:.62rem;}
+    .badge-edited{background:rgba(240,160,64,.2);color:var(--amber);font-size:.62rem;}
+    .mono{font-family:'DM Mono',monospace;font-size:.75rem;}
+    .empty-msg{text-align:center;padding:48px;color:var(--muted);font-size:.88rem;}
+    .btn-row{background:none;border:1px solid var(--border);border-radius:6px;color:var(--muted);font-size:.72rem;padding:3px 8px;cursor:pointer;transition:all .2s;}
+    .btn-row:hover{border-color:var(--accent);color:var(--accent);}
+
+    /* Employee Master Table */
+    .emp-master-row{display:grid;grid-template-columns:1fr 110px 110px 110px 110px auto;gap:8px;align-items:center;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:8px;transition:border-color .2s;}
+    .emp-master-row:hover{border-color:var(--border);}
+    .emp-master-row.row-new{border-color:rgba(78,204,163,.4);background:rgba(78,204,163,.05);}
+    .emp-master-row.row-edited{border-color:rgba(240,160,64,.4);background:rgba(240,160,64,.05);}
+    .emp-master-name{font-size:.92rem;font-weight:500;}
+    .emp-num-input{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:7px 8px;color:var(--text);font-family:'DM Mono',monospace;font-size:.82rem;width:100%;outline:none;text-align:right;transition:border-color .2s;}
+    .emp-num-input:focus{border-color:var(--accent);}
+    .emp-num-input.auto-filled{border-color:rgba(78,204,163,.4);background:rgba(78,204,163,.05);}
+    .emp-input-label{font-size:.60rem;color:var(--muted);text-align:center;margin-bottom:3px;line-height:1.3;}
+    .emp-del-btn{background:none;border:1px solid var(--border);border-radius:6px;color:var(--muted);font-size:.75rem;padding:5px 10px;cursor:pointer;transition:all .2s;white-space:nowrap;}
+    .emp-del-btn:hover{border-color:var(--red);color:var(--red);}
+    .auto-hint{font-size:.6rem;color:var(--accent2);text-align:right;margin-top:2px;min-height:12px;}
     
-    .form-group { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 16px; }
-    label { font-size: 13px; color: var(--muted); font-weight: 500; }
-    input[type="text"], input[type="number"], input[type="date"], select {
-      background: var(--surface2); border: 1px solid var(--border); color: var(--text);
-      padding: 8px 12px; border-radius: 8px; font-size: 14px; outline: none; transition: border 0.2s;
+    /* Modal */
+    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px;animation:fadeIn .2s ease;}
+    .modal-overlay.hidden{display:none;}
+    .modal{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:28px;width:100%;max-width:480px;box-shadow:var(--shadow);animation:slideUp .25s ease;}
+    .modal-title{font-family:'Josefin Sans',sans-serif;font-size:1.1rem;font-weight:700;letter-spacing:.1em;color:var(--accent);margin-bottom:20px;}
+    .form-group{margin-bottom:16px;}
+    .form-label{font-size:.75rem;color:var(--muted);letter-spacing:.08em;margin-bottom:6px;display:block;text-transform:uppercase;}
+    .form-input,.form-select{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:9px;padding:10px 14px;color:var(--text);font-family:'Noto Sans JP',sans-serif;font-size:.9rem;outline:none;transition:border-color .2s;}
+    .form-input:focus,.form-select:focus{border-color:var(--accent);}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+    .modal-footer{display:flex;gap:10px;justify-content:flex-end;margin-top:24px;}
+
+    /* Confirm */
+    .confirm-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:2000;display:flex;align-items:center;justify-content:center;padding:20px;}
+    .confirm-overlay.hidden{display:none;}
+    .confirm-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:28px;max-width:400px;width:100%;box-shadow:var(--shadow);animation:slideUp .2s ease;}
+    .confirm-title{font-family:'Josefin Sans',sans-serif;font-size:1rem;font-weight:700;color:var(--red);margin-bottom:12px;letter-spacing:.08em;}
+    .confirm-body{font-size:.88rem;color:var(--text);line-height:1.7;margin-bottom:20px;}
+    .confirm-csv-check{display:flex;align-items:center;gap:10px;background:var(--surface2);border:1px solid var(--border);border-radius:9px;padding:12px 14px;margin-bottom:20px;cursor:pointer;}
+    .confirm-csv-check input{accent-color:var(--gold);width:16px;height:16px;cursor:pointer;}
+    .confirm-csv-check span{font-size:.85rem;color:var(--gold);}
+    .confirm-footer{display:flex;gap:10px;justify-content:flex-end;}
+
+    .progress-wrap{height:3px;background:var(--border);border-radius:2px;overflow:hidden;margin-top:8px;}
+    .progress-fill{height:100%;background:linear-gradient(90deg,var(--accent2),var(--accent));border-radius:2px;transition:width .3s ease;}
+
+    #toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(70px);background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:13px 22px;border-radius:40px;font-size:.86rem;font-weight:500;z-index:9999;box-shadow:var(--shadow);transition:transform .35s cubic-bezier(.34,1.56,.64,1);white-space:nowrap;pointer-events:none;}
+    #toast.show{transform:translateX(-50%) translateY(0);}
+    #toast.success{border-color:var(--accent);color:var(--accent);}
+    #toast.error{border-color:var(--red);color:var(--red);}
+    #toast.info{border-color:var(--gold);color:var(--gold);}
+
+    .spinner{display:inline-block;width:13px;height:13px;border:2px solid rgba(255,255,255,.2);border-top-color:currentColor;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px;}
+
+    /* Payroll */
+    .global-rate-row{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:16px;}
+    .rate-input{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:8px 12px;color:var(--text);font-family:'DM Mono',monospace;font-size:.88rem;width:90px;outline:none;text-align:right;transition:border-color .2s;}
+    .rate-input:focus{border-color:var(--accent);}
+    .payroll-total{font-family:'DM Mono',monospace;font-size:1.9rem;color:var(--gold);font-weight:500;}
+
+    @keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+    @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+    @keyframes slideUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+    @keyframes spin{to{transform:rotate(360deg);}}
+
+    @media(max-width:700px){
+      .form-row{grid-template-columns:1fr;}
+      .header-title{font-size:1.5rem;}
+      .emp-master-row{grid-template-columns:1fr 90px 90px 90px 90px auto;gap:5px;}
     }
-    input:focus, select:focus { border-color: var(--accent); }
-    
-    button {
-      background: var(--accent); color: var(--bg); border: none; padding: 8px 16px;
-      border-radius: 8px; font-size: 14px; font-weight: 700; cursor: pointer;
-      display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s;
+    @media(max-width:520px){
+      .emp-master-row{grid-template-columns:1fr 1fr;row-gap:8px;}
+      .emp-master-name{grid-column:1/-1;}
     }
-    button:hover { background: var(--accent2); transform: translateY(-1px); }
-    button:active { transform: translateY(0); }
-    button.btn-amber { background: var(--amber); color: var(--bg); }
-    button.btn-amber:hover { background: #d88f35; }
-    button.btn-red { background: var(--red); color: #fff; }
-    button.btn-red:hover { background: #c54b58; }
-    button:disabled { background: var(--border); color: var(--muted); cursor: not-allowed; transform: none; }
-
-    table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14px; text-align: left; }
-    th { background: var(--surface2); color: var(--muted); font-weight: 500; padding: 10px 12px; border-bottom: 2px solid var(--border); }
-    td { padding: 8px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
-    tr:hover td { background: rgba(255,255,255,0.02); }
-
-    /* テーブル内インプット最適化 */
-    td input[type="text"], td input[type="number"], td select { width: 100%; padding: 5px 8px; font-size: 13px; }
-
-    .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 16px; }
-    .sum-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 14px; }
-    .sum-label { font-size: 12px; color: var(--muted); margin-bottom: 4px; }
-    .sum-val { font-size: 20px; font-family: 'Josefin Sans', sans-serif; font-weight: 700; color: var(--accent); }
-
-    #toast {
-      position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(100px);
-      background: var(--accent); color: var(--bg); padding: 12px 24px; border-radius: 30px;
-      font-size: 14px; font-weight: 700; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-      opacity: 0; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 9999;
-    }
-    #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-    #toast.error { background: var(--red); color: #fff; }
-
-    .sync-badge { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--red); }
-    .sync-badge.synced { background: var(--accent); }
-    .mono { font-family: 'DM Mono', monospace; font-size: 13px; }
   </style>
 </head>
 <body>
-
-<header>
-  <h1>ATTENDANCE MANAGEMENT</h1>
-  <div style="font-size: 12px; color: var(--muted);" id="connection-status">GAS未設定</div>
-</header>
-
-<div class="nav-tabs">
-  <button class="tab-btn active" onclick="switchTab('calc-tab', this)">給与計算</button>
-  <button class="tab-btn" onclick="switchTab('master-tab', this)">従業員マスタ設定</button>
-  <button class="tab-btn" onclick="switchTab('records-tab', this)">打刻データ照会</button>
-</div>
-
-<div id="calc-tab" class="tab-content active">
-  <div class="card">
-    <div class="card-title">📅 対象期間指定・データ集計</div>
-    <div class="form-group">
-      <label>GAS WebアプリURL:</label>
-      <input type="text" id="att-gas-url" style="width: 320px;" placeholder="https://script.google.com/macros/s/.../exec">
-      <button onclick="saveGasUrl()">接続保存</button>
+<div id="app">
+  <header>
+    <div>
+      <div class="header-title">MANAGEMENT</div>
+      <div class="header-sub">勤怠管理 · 従業員マスター · 給与計算</div>
     </div>
-    <div class="form-group">
-      <label>期間:</label>
-      <input type="date" id="fetch-from">
-      <span>〜</span>
-      <input type="date" id="fetch-to">
-      <button class="btn-amber" id="btn-fetch" onclick="fetchAndCalculate()">📡 記録取得 & 集計実行</button>
-    </div>
+    <div class="header-nav"><a href="index.html">← 打刻画面へ</a></div>
+  </header>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('attendance')">① 勤怠履歴</button>
+    <button class="tab-btn"        onclick="switchTab('employees')">② 従業員マスター</button>
+    <button class="tab-btn"        onclick="switchTab('payroll')">③ 給与計算</button>
   </div>
 
-  <div class="card" id="calc-result-card" style="display: none;">
-    <div class="card-title" style="justify-content: space-between;">
-      <span>📊 給与計算結果一覧</span>
-      <button onclick="downloadCSV()">📥 CSV出力</button>
+  <div class="tab-panel active" id="tab-attendance">
+    <div class="sec-label">GSS 接続設定</div>
+    <div class="card">
+      <div class="gas-row">
+        <input class="gas-input" type="url" id="att-gas-url" placeholder="https://script.google.com/macros/s/..." />
+        <button class="btn btn-outline" onclick="pingGAS()">疎通確認</button>
+      </div>
+      <div style="margin-top:8px;font-size:.72rem;color:var(--muted);">打刻画面と同じGASデプロイURLを入力してください</div>
     </div>
-    <div style="overflow-x: auto;">
-      <table id="calc-table">
-        <thead>
-          <tr>
-            <th>従業員名</th>
-            <th>出勤日数</th>
-            <th>総労働時間</th>
-            <th>基本給</th>
-            <th>深夜手当</th>
-            <th>休日手当</th>
-            <th>休深手当</th>
-            <th>交通費</th>
-            <th>総支給額</th>
-          </tr>
-        </thead>
-        <tbody id="calc-tbody"></tbody>
-      </table>
-    </div>
-  </div>
-</div>
 
-<div id="master-tab" class="tab-content">
-  <div class="card">
-    <div class="card-title" style="justify-content: space-between;">
-      <span>👥 従業員情報一覧</span>
-      <div style="display:flex; gap:8px;">
-        <button onclick="addMasterRow()">＋ 行追加</button>
-        <button class="btn-amber" onclick="saveMasterToGAS()">💾 GASへ一括保存</button>
+    <div class="sec-label">取得期間</div>
+    <div class="card">
+      <div class="date-range" style="margin-bottom:14px;">
+        <input type="date" class="date-input" id="fetch-from" />
+        <span style="color:var(--muted)">〜</span>
+        <input type="date" class="date-input" id="fetch-to" />
+        <button class="btn btn-outline" onclick="setThisMonth('fetch-from','fetch-to')">今月</button>
+        <button class="btn btn-outline" onclick="setLastMonth('fetch-from','fetch-to')">先月</button>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+        <button class="btn btn-primary" id="btn-fetch" onclick="fetchAttendance()">GSSから取得</button>
+        <div class="progress-wrap" style="flex:1;min-width:80px;display:none;" id="fetch-prog-wrap">
+          <div class="progress-fill" id="fetch-prog" style="width:0%"></div>
+        </div>
+        <span id="fetch-status" style="font-size:.75rem;color:var(--muted);"></span>
       </div>
     </div>
-    <div style="overflow-x: auto;">
-      <table id="master-table">
-        <thead>
-          <tr>
-            <th>名前</th>
-            <th>基本時給</th>
-            <th>深夜手当(増分)</th>
-            <th>休日手当(増分)</th>
-            <th>休日深夜(増分)</th>
-            <th>交通費可否</th><th>交通費単価</th><th style="width: 70px;">操作</th>
-          </tr>
-        </thead>
-        <tbody id="master-tbody"></tbody>
-      </table>
+
+    <div class="change-bar" id="change-bar" style="display:none;">
+      <span>📝 未送信の変更:</span>
+      <span class="change-count" id="change-count">0 件</span>
+      <div style="flex:1"></div>
+      <button class="btn btn-amber"   onclick="discardChanges()">変更を破棄</button>
+      <button class="btn btn-primary" id="btn-send" onclick="sendChanges()">まとめて送信</button>
+    </div>
+
+    <div class="sec-label">勤怠履歴</div>
+    <div class="card">
+      <div class="toolbar">
+        <select class="filter-select" id="filter-emp"   onchange="applyFilter()"><option value="">従業員（全員）</option></select>
+        <select class="filter-select" id="filter-shift" onchange="applyFilter()">
+          <option value="">勤務種別（全て）</option>
+          <option value="昼勤">昼勤</option>
+          <option value="夜勤">夜勤</option>
+        </select>
+        <button class="btn btn-outline" onclick="clearFilter()" style="padding:8px 14px;font-size:.78rem;">リセット</button>
+        <div style="flex:1"></div>
+        <button class="btn btn-outline" style="padding:8px 14px;font-size:.78rem;" onclick="openAttModal(null)">＋ 新規登録</button>
+        <span style="font-size:.78rem;color:var(--muted);">選択: <span id="selected-count" style="color:var(--accent);font-family:'DM Mono',monospace;">0</span>件</span>
+        <button class="btn btn-danger" id="btn-del-sel"   onclick="confirmDeleteSelected()" disabled style="padding:8px 14px;font-size:.78rem;">選択削除</button>
+        <button class="btn btn-danger" id="btn-del-range" onclick="confirmDeleteRange()"    style="padding:8px 14px;font-size:.78rem;">期間削除</button>
+      </div>
+      <div class="stats-row" id="att-stats" style="display:none;">
+        <div class="stat-box"><div class="stat-label">レコード数</div><div class="stat-value" id="stat-count">0</div></div>
+        <div class="stat-box"><div class="stat-label">従業員数</div> <div class="stat-value" id="stat-emp">0</div></div>
+        <div class="stat-box"><div class="stat-label">総勤務時間</div><div class="stat-value" id="stat-hours">0h</div></div>
+      </div>
+      <div class="tbl-wrap">
+        <table><thead><tr>
+          <th class="check-col"><input type="checkbox" id="check-all" onchange="toggleAll(this)" /></th>
+          <th>状態</th><th>日付</th><th>打刻日時</th><th>従業員</th>
+          <th>勤務種別</th><th>打刻種別</th><th>勤務時間</th><th>操作</th>
+        </tr></thead>
+        <tbody id="att-body"><tr><td colspan="9" class="empty-msg">GSSから取得してください</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-panel" id="tab-employees">
+    <div class="sec-label">GSS 従業員マスター</div>
+    <div class="card">
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:16px;">
+        <button class="btn btn-primary" onclick="fetchEmployees()">GSSから取得</button>
+        <button class="btn btn-outline" onclick="openEmpModal(null)">＋ 従業員を追加</button>
+        <button class="btn btn-primary" id="btn-save-emps" onclick="saveEmployeesToGSS()" disabled>変更をGSSに保存</button>
+        <span id="emp-save-status" style="font-size:.75rem;color:var(--muted);"></span>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 110px 110px 110px 110px auto;gap:8px;padding:0 14px 8px;font-size:.64rem;color:var(--muted);letter-spacing:.06em;">
+        <div>氏名</div>
+        <div style="text-align:center;">基本時給<br>（円）</div>
+        <div style="text-align:center;">深夜手当<br>（円/時）</div>
+        <div style="text-align:center;">土日祝手当<br>（円/時）</div>
+        <div style="text-align:center;">土日祝深夜<br>（円/時）</div>
+        <div></div>
+      </div>
+
+      <div id="emp-master-grid">
+        <div style="text-align:center;padding:32px;color:var(--muted);font-size:.88rem;">「GSSから取得」ボタンで従業員リストを読み込んでください</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-panel" id="tab-payroll">
+    <div class="sec-label">STEP 1 ／ 計算期間とデータ取得</div>
+    <div class="card">
+      <div class="date-range" style="margin-bottom:14px;">
+        <input type="date" class="date-input" id="pay-from" />
+        <span style="color:var(--muted)">〜</span>
+        <input type="date" class="date-input" id="pay-to" />
+        <button class="btn btn-outline" onclick="setThisMonth('pay-from','pay-to')">今月</button>
+        <button class="btn btn-outline" onclick="setLastMonth('pay-from','pay-to')">先月</button>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+        <button class="btn btn-primary" id="btn-pay-fetch" onclick="fetchPayrollData()">GSSからデータ取得</button>
+        <div class="progress-wrap" style="flex:1;min-width:80px;display:none;" id="pay-fetch-prog-wrap">
+          <div class="progress-fill" id="pay-fetch-prog" style="width:0%"></div>
+        </div>
+        <span id="pay-fetch-status" style="font-size:.75rem;color:var(--muted);"></span>
+      </div>
+      <div id="pay-data-preview" style="display:none;margin-top:14px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px 16px;">
+        <div style="font-size:.72rem;color:var(--muted);margin-bottom:8px;letter-spacing:.06em;text-transform:uppercase;">取得データ確認</div>
+        <div style="display:flex;gap:20px;flex-wrap:wrap;font-size:.82rem;">
+          <span>打刻レコード: <strong id="prev-rec-count" style="color:var(--accent);font-family:'DM Mono',monospace;">0</strong> 件</span>
+          <span>対象従業員: <strong id="prev-emp-count" style="color:var(--accent);font-family:'DM Mono',monospace;">0</strong> 名</span>
+          <span>従業員マスター: <strong id="prev-master-count" style="color:var(--accent);font-family:'DM Mono',monospace;">0</strong> 名</span>
+          <span>祝日: <strong id="prev-holiday-count" style="color:var(--accent2);font-family:'DM Mono',monospace;">取得中...</strong></span>
+        </div>
+        <div id="pay-data-warn" style="display:none;margin-top:8px;font-size:.75rem;color:var(--amber);"></div>
+      </div>
+    </div>
+
+    <div class="sec-label">STEP 2 ／ 交通費設定</div>
+    <div class="card">
+      <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap;">
+        <label style="font-size:.85rem;color:var(--muted);">1日あたりの交通費</label>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <input type="number" id="transport-fee" value="500" min="0" step="10"
+            style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:8px 12px;color:var(--text);font-family:'DM Mono',monospace;font-size:.9rem;width:110px;outline:none;text-align:right;transition:border-color .2s;"
+            onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'" />
+          <span style="font-size:.85rem;color:var(--muted);">円 / 日</span>
+        </div>
+        <span style="font-size:.75rem;color:var(--muted);">※ 昼勤・夜勤が同日にある場合も1日として計上します</span>
+      </div>
+    </div>
+
+    <div class="sec-label">STEP 3 ／ 計算実行</div>
+    <div class="card">
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;">
+        <button class="btn btn-primary" id="btn-calc" onclick="calcPayroll()" disabled>給与計算を実行</button>
+        <button class="btn btn-gold"    id="btn-pay-csv" onclick="downloadPayCSV()" disabled>CSVダウンロード</button>
+        <span id="holiday-fetch-note" style="font-size:.72rem;color:var(--accent2);align-self:center;"></span>
+      </div>
+      <div id="payroll-result" style="display:none;">
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:16px;">
+          <div style="font-family:'Josefin Sans',sans-serif;font-size:.75rem;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;margin-bottom:12px;">計算結果サマリー</div>
+          <div style="display:flex;gap:24px;flex-wrap:wrap;">
+            <div><div style="font-size:.7rem;color:var(--muted);">期間</div><div class="mono" id="pay-sum-period">--</div></div>
+            <div><div style="font-size:.7rem;color:var(--muted);">対象人数</div><div class="mono" id="pay-sum-heads">--</div></div>
+            <div><div style="font-size:.7rem;color:var(--muted);">総支給額</div><div class="payroll-total" id="pay-sum-total">¥0</div></div>
+          </div>
+        </div>
+        <div class="tbl-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>従業員名</th><th>出勤日数</th><th>総労働</th>
+                <th>通常時間</th><th>深夜時間</th><th>土日祝時間</th><th>土日祝深夜</th>
+                <th>基本給</th><th>深夜手当</th><th>土日祝手当</th><th>土日祝深夜手当</th>
+                <th>給与小計</th><th>交通費</th><th>支給総額</th>
+              </tr>
+            </thead>
+            <tbody id="pay-body"></tbody>
+          </table>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
-<div id="records-tab" class="tab-content">
-  <div class="card">
-    <div class="card-title">📋 取得済打刻データ明細 (<span id="record-count">0</span>件)</div>
-    <div style="overflow-x: auto; max-height: 500px;">
-      <table>
-        <thead>
-          <tr>
-            <th>従業員名</th>
-            <th>勤務種別</th>
-            <th>打刻種別</th>
-            <th>日付</th>
-            <th>打刻時刻</th>
-            <th>勤務時間</th>
-          </tr>
-        </thead>
-        <tbody id="records-tbody">
-          <tr><td colspan="6" style="text-align:center; color:var(--muted);">データが未取得です。「給与計算」タブから取得してください。</td></tr>
-        </tbody>
-      </table>
+<div class="modal-overlay hidden" id="att-modal" onclick="closeAttModal(event)">
+  <div class="modal">
+    <div class="modal-title" id="att-modal-title">✏️ 打刻レコードを編集</div>
+    <input type="hidden" id="modal-rec-id" />
+    <div class="form-group">
+      <label class="form-label">従業員名 *</label>
+      <select class="form-select" id="modal-emp-sel"></select>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">勤務種別 *</label>
+        <select class="form-select" id="modal-shift">
+          <option value="昼勤">昼勤</option>
+          <option value="夜勤">夜勤</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">打刻種別 *</label>
+        <select class="form-select" id="modal-punch">
+          <option value="出勤">出勤</option>
+          <option value="退勤">退勤</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">実際の日付 (YYYY-MM-DD) *</label>
+        <input type="date" class="form-input" id="modal-date" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">勤務時間修正 (分)</label>
+        <input type="number" class="form-input" id="modal-dur" placeholder="空欄なら自動計算" min="0" />
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">打刻日時 (丸め前ローカル) *</label>
+      <input type="datetime-local" class="form-input" id="modal-ptime" step="1" />
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeAttModal()">キャンセル</button>
+      <button class="btn btn-primary" onclick="saveAttRecord()">保存</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay hidden" id="emp-modal" onclick="closeEmpModal(event)">
+  <div class="modal">
+    <div class="modal-title">＋ 従業員マスター 新規登録</div>
+    <div class="form-group">
+      <label class="form-label">従業員氏名 *</label>
+      <input type="text" class="form-input" id="new-emp-name" placeholder="例：山田 太郎" />
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">基本時給（円） *</label>
+        <input type="number" class="form-input" id="new-emp-wage" min="0" step="1" placeholder="1000" oninput="autoCalcModalAllowances(this.value)" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">深夜時給（円/時）<br><span style="font-weight:400;font-size:.68rem;">平日夜 +25%</span></label>
+        <input type="number" class="form-input" id="new-emp-night" min="0" step="1" placeholder="自動入力" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">土日祝手当（円/時）<br><span style="font-weight:400;font-size:.68rem;">休日 +35%</span></label>
+        <input type="number" class="form-input" id="new-emp-holiday" min="0" step="1" placeholder="自動入力" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">土日祝深夜（円/時）<br><span style="font-weight:400;font-size:.68rem;">休日深夜 +60%</span></label>
+        <input type="number" class="form-input" id="new-emp-hnight" min="0" step="1" placeholder="自動入力" />
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeEmpModal()">キャンセル</button>
+      <button class="btn btn-primary" onclick="addNewEmployee()">追加</button>
+    </div>
+  </div>
+</div>
+
+<div class="confirm-overlay hidden" id="confirm-overlay">
+  <div class="confirm-box">
+    <div class="confirm-title" id="confirm-title">削除の確認</div>
+    <div class="confirm-body" id="confirm-body"></div>
+    <label class="confirm-csv-check">
+      <input type="checkbox" id="confirm-csv-chk" checked />
+      <span>📄 削除前にCSVをダウンロードする</span>
+    </label>
+    <div class="confirm-footer">
+      <button class="btn btn-outline" onclick="closeConfirm()">キャンセル</button>
+      <button class="btn btn-danger" id="confirm-ok">削除を実行</button>
     </div>
   </div>
 </div>
@@ -189,396 +445,759 @@
 <div id="toast"></div>
 
 <script>
+'use strict';
+
 // ══════════════════════════════════════════════
-//  状態管理 & 定数
+// IndexedDB
 // ══════════════════════════════════════════════
 let db = null;
-let gasUrl = '';
-let masterEmployees = []; 
-let fetchedRecords = [];   
-let calculationResults = []; 
-
-const DB_NAME = 'AttendanceManagementAdminDB';
-const DB_VERSION = 1;
-
-// 祝日キャッシュ (年 -> Set)
-const holidayCache = {};
-
-// ══════════════════════════════════════════════
-//  IndexedDB 初期化
-// ══════════════════════════════════════════════
 function initDB() {
-  return new Promise((resolve, reject) => {
-    const request = indexedDB.open(DB_NAME, DB_VERSION);
-    request.onerror = e => reject(e);
-    request.onsuccess = e => { db = e.target.result; resolve(); };
-    request.onupgradeneeded = e => {
-      const d = e.target.result;
-      if (!d.objectStoreNames.contains('config')) d.createObjectStore('config');
-    };
-  });
-}
-function getConfig(key) {
-  return new Promise(resolve => {
-    const tx = db.transaction(['config'], 'readonly');
-    const req = tx.objectStore('config').get(key);
-    req.onsuccess = () => resolve(req.result);
-  });
-}
-function setConfig(key, val) {
-  return new Promise(resolve => {
-    const tx = db.transaction(['config'], 'readwrite');
-    tx.objectStore('config').put(val, key);
-    tx.oncomplete = () => resolve();
-  });
-}
-
-// ══════════════════════════════════════════════
-//  タブ切り替え
-// ══════════════════════════════════════════════
-function switchTab(tabId, btn) {
-  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-  document.getElementById(tabId).classList.add('active');
-  btn.classList.add('active');
-}
-
-// ══════════════════════════════════════════════
-//  GAS連携基本設定
-// ══════════════════════════════════════════════
-async function saveGasUrl() {
-  const url = document.getElementById('att-gas-url').value.trim();
-  if(!url) return showToast('URLを入力してください', 'error');
-  gasUrl = url;
-  localStorage.setItem('gasUrl', url);
-  showToast('接続URLを保存しました');
-  updateConnectionBadge(true);
-  await loadMasterFromGAS();
-}
-
-function updateConnectionBadge(hasUrl) {
-  const el = document.getElementById('connection-status');
-  if(hasUrl) {
-    el.textContent = '🟢 GAS接続設定済';
-    el.style.color = 'var(--accent)';
-  } else {
-    el.textContent = '🔴 GAS未設定';
-    el.style.color = 'var(--red)';
-  }
-}
-
-// ══════════════════════════════════════════════
-//  従業員マスタ ロジック
-// ══════════════════════════════════════════════
-async function loadMasterFromGAS() {
-  if (!gasUrl) return;
-  try {
-    const res = await fetch(`${gasUrl}?action=get_master`);
-    const obj = await res.json();
-    if (obj.status === 'success') {
-      masterEmployees = obj.employees || [];
-      renderMasterTable();
-      showToast('👥 従業員マスターを読み込みました');
-    } else {
-      showToast('マスター取得失敗: ' + obj.message, 'error');
-    }
-  } catch (e) {
-    showToast('GAS通信エラー(Master)', 'error');
-    console.error(e);
-  }
-}
-
-// 【修正】行レンダリング部に「交通費可否」セレクトボックスを新設
-function renderMasterTable() {
-  const tbody = document.getElementById('master-tbody');
-  tbody.innerHTML = '';
-
-  masterEmployees.forEach((emp, index) => {
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td><input type="text" value="${emp.name || ''}" onchange="updateMaster(${index}, 'name', this.value)"></td>
-      <td><input type="number" value="${emp.wage || 0}" onchange="updateMaster(${index}, 'wage', Number(this.value))"></td>
-      <td><input type="number" value="${emp.nightAllowance || 0}" onchange="updateMaster(${index}, 'nightAllowance', Number(this.value))"></td>
-      <td><input type="number" value="${emp.holidayAllowance || 0}" onchange="updateMaster(${index}, 'holidayAllowance', Number(this.value))"></td>
-      <td><input type="number" value="${emp.holidayNightAllowance || 0}" onchange="updateMaster(${index}, 'holidayNightAllowance', Number(this.value))"></td>
-      <td>
-        <select onchange="updateMaster(${index}, 'transportStatus', this.value)">
-          <option value="支給" ${emp.transportStatus !== '非支給' ? 'selected' : ''}>支給</option>
-          <option value="非支給" ${emp.transportStatus === '非支給' ? 'selected' : ''}>非支給</option>
-        </select>
-      </td>
-      <td><input type="number" value="${emp.transportFee || 0}" onchange="updateMaster(${index}, 'transportFee', Number(this.value))"></td>
-      <td><button class="btn-red" onclick="deleteMaster(${index})">削除</button></td>
-    `;
-    tbody.appendChild(tr);
-  });
-}
-
-function updateMaster(index, field, value) {
-  if (masterEmployees[index]) {
-    masterEmployees[index][field] = value;
-  }
-}
-
-// 【修正】デフォルト初期値に transportStatus: '支給' を明示
-function addMasterRow() {
-  masterEmployees.push({
-    id: 'EMP_' + Date.now() + '_' + Math.floor(Math.random()*1000),
-    name: '',
-    wage: 1000,
-    nightAllowance: 250,
-    holidayAllowance: 300,
-    holidayNightAllowance: 550,
-    transportStatus: '支給',
-    transportFee: 0
-  });
-  renderMasterTable();
-}
-
-function deleteMaster(index) {
-  if(confirm('この行を削除しますか？')) {
-    masterEmployees.splice(index, 1);
-    renderMasterTable();
-  }
-}
-
-async function saveMasterToGAS() {
-  if (!gasUrl) return showToast('先にGAS接続設定を行ってください', 'error');
-  // バリデーション
-  for(let emp of masterEmployees) {
-    if(!emp.name.trim()) return showToast('名前が空の行があります', 'error');
-  }
-
-  try {
-    const res = await fetch(gasUrl, {
-      method: 'POST',
-      body: JSON.stringify({ action: 'save_master', employees: masterEmployees })
-    });
-    const obj = await res.json();
-    if(obj.success) {
-      showToast('💾 マスターをGAS経由でスプレッドシートに保存しました', 'success');
-    } else {
-      showToast('保存失敗: ' + obj.message, 'error');
-    }
-  } catch (e) {
-    showToast('GAS保存通信エラー', 'error');
-    console.error(e);
-  }
-}
-
-// ══════════════════════════════════════════════
-//  祝日判定 API（内閣府CSV等代替・オープンAPI経由キャッシュ）
-// ══════════════════════════════════════════════
-async function ensureHolidayCache(years) {
-  for(const y of years) {
-    if (holidayCache[y]) continue;
-    try {
-      const res = await fetch(`https://holidays-jp.github.io/api/v1/${y}/date.json`);
-      if(res.ok) {
-        const data = await res.json(); // {"YYYY-MM-DD": "祝日名"}
-        holidayCache[y] = new Set(Object.keys(data));
-      } else {
-        holidayCache[y] = new Set();
+  return new Promise((res,rej) => {
+    const req = indexedDB.open('KintaiDB', 3);
+    req.onupgradeneeded = e => {
+      const d = e.target.result, ov = e.oldVersion;
+      if (!d.objectStoreNames.contains('records')) {
+        const s = d.createObjectStore('records', { keyPath:'id', autoIncrement:true });
+        s.createIndex('synced','synced',{unique:false});
       }
-    } catch(e) {
-      console.error(`祝日API取得失敗 (${y}):`, e);
-      holidayCache[y] = new Set();
+      if (d.objectStoreNames.contains('employees') && ov < 3) d.deleteObjectStore('employees');
+      if (!d.objectStoreNames.contains('employees')) {
+        const es = d.createObjectStore('employees', { keyPath:'id' });
+        es.createIndex('name','name',{unique:false});
+      }
+    };
+    req.onsuccess = e => { db = e.target.result; res(); };
+    req.onerror = e => rej(e.target.error);
+  });
+}
+const idbReq = req => new Promise((res,rej) => { req.onsuccess=()=>res(req.result); req.onerror=()=>rej(req.error); });
+const getAllRecords = () => idbReq(db.transaction('records','readonly').objectStore('records').getAll());
+const getAllEmpsRaw = () => idbReq(db.transaction('employees','readonly').objectStore('employees').getAll());
+const putEmp = emp => idbReq(db.transaction('employees','summaryRow'?'readwrite':'readwrite').objectStore('employees').put(emp));
+const delEmp = id => idbReq(db.transaction('employees','readwrite').objectStore('employees').delete(id));
+const upsertRecord = rec => idbReq(db.transaction('records','readwrite').objectStore('records').put(rec));
+const delRecById = id => idbReq(db.transaction('records','readwrite').objectStore('records').delete(id));
+const clearDB = () => Promise.all([
+  idbReq(db.transaction('records','readwrite').objectStore('records').clear()),
+  idbReq(db.transaction('employees','readwrite').objectStore('employees').clear())
+]);
+
+// ══════════════════════════════════════════════
+// グローバル管理変数
+// ══════════════════════════════════════════════
+let gasUrl = localStorage.getItem('gasUrl') || '';
+let fetchedRecords = [];  // TAB 1 用
+let pendingChanges = [];  // TAB 1 用
+let masterEmployees = []; // TAB 2 用
+let empPendingChanges = []; // TAB 2 用
+
+// TAB 3 (給与計算用) 
+let payRecords = [];
+let payEmpMap = {};
+const holidayCache = {}; 
+let payrollResults = []; 
+
+// ══════════════════════════════════════════════
+// ユーティリティ
+// ══════════════════════════════════════════════
+const pad = n => String(n).padStart(2,'0');
+const fmtDT = d => {
+  if(!d || d === 'null' || d === '') return '—';
+  const normalized = String(d).replace(' ', 'T');
+  const dt = new Date(normalized);
+  if (isNaN(dt.getTime())) return String(d).substring(0, 16);
+  return `${dt.getFullYear()}-${pad(dt.getMonth()+1)}-${pad(dt.getDate())} ${pad(dt.getHours())}:${pad(dt.getMinutes())}:${pad(dt.getSeconds())}`;
+};
+// 日時文字列から "HH:mm" だけを安全に抜き出すヘルパー（不正な値は '—' を返す）
+const fmtTimeOnly = d => {
+  if (!d || d === 'null' || d === '') return '—';
+  const normalized = String(d).replace(' ', 'T');
+  const dt = new Date(normalized);
+  if (isNaN(dt.getTime())) return '—';
+  return `${pad(dt.getHours())}:${pad(dt.getMinutes())}`;
+};
+const fmtMin = m => {
+  if(m==null)return'—';
+  const h=Math.floor(m/60),mn=m%60;
+  return `${h>0?h+'h ':''}${mn}m`;
+};
+const isoToLocal = iso => {
+  const normalized = String(iso).replace(' ', 'T');
+  const d = new Date(normalized);
+  if (isNaN(d.getTime())) return String(iso).substring(0, 16);
+  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+};
+function setThisMonth(f,t) {
+  const n=new Date(),y=n.getFullYear(),m=pad(n.getMonth()+1),l=new Date(y,n.getMonth()+1,0).getDate();
+  document.getElementById(f).value=`${y}-${m}-01`;
+  document.getElementById(t).value=`${y}-${m}-${l}`;
+}
+function setLastMonth(f,t) {
+  const n=new Date(),d=new Date(n.getFullYear(),n.getMonth()-1,1),y=d.getFullYear(),m=pad(d.getMonth()+1),l=new Date(y,d.getMonth()+1,0).getDate();
+  document.getElementById(f).value=`${y}-${m}-01`;
+  document.getElementById(t).value=`${y}-${m}-${l}`;
+}
+function switchTab(name) {
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',['attendance','employees','payroll'][i]===name));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById(`tab-${name}`).classList.add('active');
+}
+let toastTimer=null;
+function showToast(msg,type='info') {
+  const el=document.getElementById('toast');
+  el.textContent=msg; el.className=`show ${type}`;
+  clearTimeout(toastTimer); toastTimer=setTimeout(()=>el.className='',3400);
+}
+function getGASUrl() {
+  const v = document.getElementById('att-gas-url').value.trim();
+  if(v){gasUrl=v;localStorage.setItem('gasUrl',v);}
+  return gasUrl;
+}
+async function pingGAS() {
+  const url=getGASUrl(); if(!url){showToast('⚠️ GAS URLを入力してください','error');return;}
+  try {
+    const r=await fetch(`${url}?action=ping`); const j=await r.json();
+    showToast(j.status==='ok'?'✅ 接続成功':'⚠️ '+j.message,j.status==='ok'?'success':'error');
+  } catch(e){showToast('❌ 接続失敗: '+e.message,'error');}
+}
+
+// ══════════════════════════════════════════════
+// ① 勤怠履歴
+// ══════════════════════════════════════════════
+async function fetchAttendance() {
+  const url=getGASUrl(), from=document.getElementById('fetch-from').value, to=document.getElementById('fetch-to').value;
+  if(!url){showToast('⚠️ GAS URLを入力してください','error');return;}
+  if(!from||!to){showToast('⚠️ 期間を設定してください','error');return;}
+  if(pendingChanges.length>0&&!confirm('未送信の変更があります。続けますか？'))return;
+  const btn=document.getElementById('btn-fetch'); const pw=document.getElementById('fetch-prog-wrap');
+  btn.disabled=true; btn.innerHTML='<span class="spinner"></span>取得中...'; pw.style.display='block';
+  document.getElementById('fetch-prog').style.width='30%';
+  try {
+    const res=await fetch(`${url}?action=fetch&from=${from}&to=${to}`);
+    document.getElementById('fetch-prog').style.width='70%';
+    const json=await res.json(); if(json.status!=='ok') throw new Error(json.message);
+    fetchedRecords=(json.records||[]).map(r=>({...r,synced:1})); pendingChanges=[];
+    for(const r of fetchedRecords) if(r.id) await upsertRecord(r);
+    document.getElementById('fetch-prog').style.width='100%';
+    document.getElementById('fetch-status').textContent=`✅ ${fetchedRecords.length}件取得`;
+    buildFilterOptions(); applyFilter();
+  } catch(e){showToast('❌ 取得失敗: '+e.message,'error');} finally{btn.disabled=false;btn.innerHTML='GSSから取得';setTimeout(()=>{pw.style.display='none';},1000);}
+}
+function buildFilterOptions() {
+  const s=document.getElementById('filter-emp'), curr=s.value;
+  const names=[...new Set(fetchedRecords.map(r=>r.employeeName))].sort();
+  s.innerHTML='<option value="">従業員（全員）</option>'+names.map(n=>`<option value="${n}">${n}</option>`).join('');
+  if(names.includes(curr)) s.value=curr;
+}
+function applyFilter() {
+  const emp=document.getElementById('filter-emp').value, shift=document.getElementById('filter-shift').value;
+  let fil=fetchedRecords;
+  if(emp) fil=fil.filter(r=>r.employeeName===emp);
+  if(shift) fil=fil.filter(r=>r.shift===shift);
+  renderAttendanceTable(fil); updateStats(fil);
+}
+function clearFilter(){document.getElementById('filter-emp').value='';document.getElementById('filter-shift').value='';applyFilter();}
+function renderAttendanceTable(list) {
+  const tbody=document.getElementById('att-body'); if(!list.length){tbody.innerHTML='<tr><td colspan="9" class="empty-msg">該当データがありません</td></tr>';return;}
+  tbody.innerHTML=list.map(r=>{
+    const stBadge=r.synced===0?(r._isNew?'<span class="badge badge-new">新規未送</span>':'<span class="badge badge-edited">修正未送</span>'):'';
+    const sBadge=r.shift==='昼勤'?`<span class="badge badge-day">${r.shift}</span>`:`<span class="badge badge-night">${r.shift}</span>`;
+    const pBadge=r.punchType==='出勤'?`<span class="badge badge-in">${r.punchType}</span>`:`<span class="badge badge-out">${r.punchType}</span>`;
+    const durBadge=r.punchType==='退勤'?`<span class="badge badge-dur">${fmtMin(r.durationMinutes)}</span>`:'—';
+    return `<tr class="${r.synced===0?(r._isNew?'row-new':'row-edited'):''}">
+      <td class="check-col"><input type="checkbox" class="rec-chk" data-id="${r.id}" onchange="updateSelectedCount()" /></td>
+      <td>${stBadge}</td><td class="mono">${r.date||'—'}</td><td class="mono">${fmtDT(r.punchTime)}</td>
+      <td><strong>${r.employeeName}</strong></td><td>${sBadge}</td><td>${pBadge}</td><td>${durBadge}</td>
+      <td><button class="btn-row" onclick="openAttModal(${r.id})">編集</button></td></tr>`;
+  }).join('');
+  document.getElementById('check-all').checked=false; updateSelectedCount();
+}
+function updateStats(list) {
+  const div=document.getElementById('att-stats'); if(!list.length){div.style.display='none';return;} div.style.display='flex';
+  const emps=new Set(list.map(r=>r.employeeName)).size;
+  const tot=list.reduce((sum,r)=>sum+(Number(r.durationMinutes)||0),0);
+  document.getElementById('stat-count').textContent=list.length;
+  document.getElementById('stat-emp').textContent=emps;
+  document.getElementById('stat-hours').textContent=Math.round(tot/60)+'h';
+}
+function toggleAll(chk){document.querySelectorAll('.rec-chk').forEach(c=>c.checked=chk.checked);updateSelectedCount();}
+function updateSelectedCount() {
+  const cnt=document.querySelectorAll('.rec-chk:checked').length;
+  document.getElementById('selected-count').textContent=cnt;
+  document.getElementById('btn-del-sel').disabled=(cnt===0);
+}
+function addChange(action,record){pendingChanges=pendingChanges.filter(c=>c.record.id!==record.id);pendingChanges.push({action,record});updateChangeBadge();}
+function updateChangeBadge() {
+  const bar=document.getElementById('change-bar');
+  if(!pendingChanges.length){bar.style.display='none';return;}
+  bar.style.display='flex'; document.getElementById('change-count').textContent=`${pendingChanges.length} 件`;
+}
+function discardChanges(){if(!confirm('すべての変更を破棄してGSSから再取得しますか？'))return;pendingChanges=[];updateChangeBadge();fetchAttendance();}
+async function sendChanges() {
+  const url=getGASUrl(); if(!url||!pendingChanges.length)return;
+  const btn=document.getElementById('btn-send'); btn.disabled=true; btn.innerHTML='<span class="spinner"></span>送信中...';
+  try {
+    const ups=pendingChanges.filter(c=>c.action==='upsert').map(c=>c.record);
+    const dels=pendingChanges.filter(c=>c.action==='delete').map(c=>c.record.id);
+    if(ups.length){
+      const r=await fetch(url,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'upsert',records:ups})});
+      const j=await r.json(); if(j.status!=='ok')throw new Error(j.message);
     }
+    if(dels.length){
+      const r=await fetch(url,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'delete',ids:dels})});
+      const j=await r.json(); if(j.status!=='ok')throw new Error(j.message);
+    }
+    for(const r of ups){ await upsertRecord({...r,synced:1}); const fr=fetchedRecords.find(x=>x.id===r.id); if(fr) fr.synced=1; }
+    for(const id of dels) await delRecById(id);
+    showToast(`✅ ${pendingChanges.length}件を送信しました`,'success'); pendingChanges=[]; updateChangeBadge(); applyFilter();
+  } catch(e){showToast('❌ 送信失敗: '+e.message,'error');} finally{btn.disabled=false;btn.innerHTML='まとめて送信';}
+}
+function openAttModal(id) {
+  const allEmps=[...new Set([...masterEmployees.map(e=>e.name),...fetchedRecords.map(r=>r.employeeName)])].sort();
+  document.getElementById('modal-emp-sel').innerHTML=allEmps.map(n=>`<option value="${n}">${n}</option>`).join('');
+  if(id===null){
+    document.getElementById('att-modal-title').textContent='＋ 新規打刻登録'; document.getElementById('modal-rec-id').value='';
+    document.getElementById('modal-emp-sel').value=allEmps[0]||''; document.getElementById('modal-shift').value='昼勤';
+    document.getElementById('modal-punch').value='出勤'; document.getElementById('modal-ptime').value=isoToLocal(new Date().toISOString());
+    document.getElementById('modal-date').value=new Date().toISOString().substring(0,10); document.getElementById('modal-dur').value='';
+  } else {
+    const r=fetchedRecords.find(x=>x.id===id); if(!r)return;
+    document.getElementById('att-modal-title').textContent='✏️ 打刻レコードを編集'; document.getElementById('modal-rec-id').value=r.id;
+    document.getElementById('modal-emp-sel').value=r.employeeName; document.getElementById('modal-shift').value=r.shift;
+    document.getElementById('modal-punch').value=r.punchType; document.getElementById('modal-ptime').value=isoToLocal(r.punchTime);
+    document.getElementById('modal-date').value=r.date||r.punchTime.substring(0,10); document.getElementById('modal-dur').value=r.durationMinutes??'';
+  }
+  document.getElementById('att-modal').classList.remove('hidden');
+}
+function closeAttModal(e){if(e&&e.target!==document.getElementById('att-modal'))return;document.getElementById('att-modal').classList.add('hidden');}
+async function saveAttRecord(){
+  const idVal=document.getElementById('modal-rec-id').value, empName=document.getElementById('modal-emp-sel').value.trim();
+  const shift=document.getElementById('modal-shift').value, punchType=document.getElementById('modal-punch').value;
+  const ptLocal=document.getElementById('modal-ptime').value, dateVal=document.getElementById('modal-date').value, durVal=document.getElementById('modal-dur').value;
+  if(!empName||!ptLocal||!dateVal){showToast('⚠️ 必須項目を入力してください','error');return;}
+  const punchISO=new Date(ptLocal).toISOString(), isNew=!idVal;
+  const record={
+    id:isNew?Date.now():Number(idVal), employeeName:empName,shift,punchType, punchTime:punchISO,punchTimeRaw:punchISO,
+    date:dateVal,durationMinutes:durVal!==''?Number(durVal):null, synced:0,syncedAt:null,_isNew:isNew,
+  };
+  if(isNew) fetchedRecords.push(record); else { const idx=fetchedRecords.findIndex(r=>r.id===record.id); if(idx>=0)fetchedRecords[idx]=record; }
+  await upsertRecord(record); addChange('upsert',record); document.getElementById('att-modal').classList.add('hidden');
+  buildFilterOptions(); applyFilter(); showToast(isNew?'✅ 新規レコードを追加しました':'✅ レコードを更新しました','success');
+}
+let confirmResolve=null;
+function openConfirm(title,body,onOk){
+  document.getElementById('confirm-title').textContent=title; document.getElementById('confirm-body').textContent=body;
+  document.getElementById('confirm-overlay').classList.remove('hidden');
+  document.getElementById('confirm-ok').onclick=()=>{closeConfirm();onOk();};
+}
+function closeConfirm(){document.getElementById('confirm-overlay').classList.add('hidden');}
+function confirmDeleteSelected(){
+  const ids=Array.from(document.querySelectorAll('.rec-chk:checked')).map(c=>Number(c.dataset.id)); if(!ids.length)return;
+  openConfirm('選択レコードの削除',`${ids.length}件の選択されたレコードを削除しますか？`,async()=>{
+    if(document.getElementById('confirm-csv-chk').checked) downloadCSVFromList(fetchedRecords.filter(r=>ids.includes(r.id)),'削除退避_選択');
+    for(const id of ids){
+      const r=fetchedRecords.find(x=>x.id===id);
+      if(r){
+        if(r.synced===1) addChange('delete',r);
+        else { fetchedRecords=fetchedRecords.filter(x=>x.id!==id); pendingChanges=pendingChanges.filter(c=>c.record.id!==id); }
+        await delRecById(id);
+      }
+    }
+    updateChangeBadge(); applyFilter(); showToast('🗑️ 選択レコードを削除しました(未送信を含みます)','info');
+  });
+}
+function confirmDeleteRange(){
+  const from=document.getElementById('fetch-from').value, to=document.getElementById('fetch-to').value;
+  if(!from||!to){showToast('⚠️ 取得期間を設定してください。その範囲が削除対象になります','error');return;}
+  openConfirm('期間内レコードの削除',`現在設定されている期間 [ ${from} 〜 ${to} ] の全レコードを削除しますか？`,async()=>{
+    const targets=fetchedRecords.filter(r=>r.date>=from&&r.date<=to); if(!targets.length){showToast('削除対象のレコードがありません','info');return;}
+    if(document.getElementById('confirm-csv-chk').checked) downloadCSVFromList(targets,`削除退避_${from}_${to}`);
+    for(const r of targets){
+      if(r.synced===1) addChange('delete',r);
+      else { fetchedRecords=fetchedRecords.filter(x=>x.id!==r.id); pendingChanges=pendingChanges.filter(c=>c.record.id!==r.id); }
+      await delRecById(r.id);
+    }
+    updateChangeBadge(); applyFilter(); showToast('🗑️ 期間内レコードを削除しました','info');
+  });
+}
+function downloadCSVFromList(list,fileName){
+  const hdrs='レコードID,従業員名,勤務種別,打刻種別,日付,打刻時刻(丸め),同期状態';
+  const rows=list.map(r=>[r.id,r.employeeName,r.shift,r.punchType,r.date,fmtDT(r.punchTime),r.synced].join(','));
+  const csv='\uFEFF'+[hdrs,...rows].join('\n');
+  const a=Object.assign(document.createElement('a'),{href:URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8;'})),download:`${fileName}.csv`});
+  a.click(); URL.revokeObjectURL(a.href);
+}
+
+// ══════════════════════════════════════════════
+// ② 従業員マスター
+// ══════════════════════════════════════════════
+async function fetchEmployees() {
+  const url=getGASUrl(); if(!url){showToast('⚠️ GAS URLを入力してください','error');return;}
+  try {
+    const res=await fetch(`${url}?action=fetchEmployees`); const json=await res.json();
+    if(json.status!=='ok') throw new Error(json.message);
+    masterEmployees=json.employees||[]; empPendingChanges=[];
+    const store=db.transaction('employees','readwrite').objectStore('employees');
+    await store.clear(); for(const e of masterEmployees) if(e.id) await store.put(e);
+    renderEmpMaster(); document.getElementById('btn-save-emps').disabled=true;
+    document.getElementById('emp-save-status').textContent=`GSSから${masterEmployees.length}名読み込みました`;
+  } catch(e){showToast('❌ 従業員取得失敗: '+e.message,'error');}
+}
+function renderEmpMaster() {
+  const grid=document.getElementById('emp-master-grid'); if(!masterEmployees.length){grid.innerHTML='<div style="text-align:center;padding:32px;color:var(--muted);">登録されている従業員はいません</div>';return;}
+  grid.innerHTML=masterEmployees.map(e=>{
+    const pUps=empPendingChanges.filter(c=>String(c.emp.id)===String(e.id)); const isEdited=pUps.length&&pUps[0].action==='upsert'; const isNew=e._isNew;
+    return `<div class="emp-master-row ${isNew?'row-new':(isEdited?'row-edited':'')}" data-id="${e.id}">
+      <div class="emp-master-name"><strong>${e.name}</strong> ${isNew?'<span class="badge badge-new">新規</span>':(isEdited?'<span class="badge badge-edited">変更</span>':'')}</div>
+      <div><input type="number" class="emp-num-input" data-field="wage" value="${e.wage||0}" oninput="autoCalcAllowances(${e.id},this.value)" /></div>
+      <div><div class="emp-input-label" id="hint-night-${e.id}"></div><input type="number" class="emp-num-input" data-field="nightAllowance" value="${e.nightAllowance||0}" oninput="markEmpChanged(${e.id})" /></div>
+      <div><div class="emp-input-label" id="hint-holiday-${e.id}"></div><input type="number" class="emp-num-input" data-field="holidayAllowance" value="${e.holidayAllowance||0}" oninput="markEmpChanged(${e.id})" /></div>
+      <div><div class="emp-input-label" id="hint-hnight-${e.id}"></div><input type="number" class="emp-num-input" data-field="holidayNightAllowance" value="${e.holidayNightAllowance||0}" oninput="markEmpChanged(${e.id})" /></div>
+      <div style="text-align:right;"><button class="emp-del-btn" onclick="deleteEmpLocally(${e.id})">削除</button></div></div>`;
+  }).join('');
+  masterEmployees.forEach(e=>showAutoHint(e.id,e.wage));
+}
+function openEmpModal(){document.getElementById('new-emp-name').value='';document.getElementById('new-emp-wage').value='';document.getElementById('new-emp-night').value='';document.getElementById('new-emp-holiday').value='';document.getElementById('new-emp-hnight').value='';document.getElementById('emp-modal').classList.remove('hidden');}
+function closeEmpModal(e){if(e&&e.target!==document.getElementById('emp-modal'))return;document.getElementById('emp-modal').classList.add('hidden');}
+function autoCalcModalAllowances(val) {
+  const wage = Math.floor(Number(val)) || 0;
+  document.getElementById('new-emp-night').value = wage ? Math.floor(wage * 1.25) : '';
+  document.getElementById('new-emp-holiday').value = wage ? Math.floor(wage * 1.35) : '';
+  document.getElementById('new-emp-hnight').value = wage ? Math.floor(wage * 1.60) : '';
+}
+function autoCalcAllowances(id, wageVal) {
+  const wage = Math.floor(Number(wageVal)) || 0; showAutoHint(id, wage);
+  const row = document.querySelector(`.emp-master-row[data-id="${id}"]`); if(!row) return;
+  const nightIn = row.querySelector('[data-field="nightAllowance"]'), holidayIn = row.querySelector('[data-field="holidayAllowance"]'), hNightIn = row.querySelector('[data-field="holidayNightAllowance"]');
+  nightIn.value = Math.floor(wage * 1.25); holidayIn.value = Math.floor(wage * 1.35); hNightIn.value = Math.floor(wage * 1.60);
+  nightIn.classList.add('auto-filled'); holidayIn.classList.add('auto-filled'); hNightIn.classList.add('auto-filled');
+  markEmpChanged(id);
+}
+function showAutoHint(id, wage){
+  wage = Math.floor(Number(wage)) || 0; if(!wage) return;
+  const nh = document.getElementById(`hint-night-${id}`), hh = document.getElementById(`hint-holiday-${id}`), hnh = document.getElementById(`hint-hnight-${id}`);
+  if(nh) nh.textContent = `標準25%:¥${Math.floor(wage*1.25)}`; if(hh) hh.textContent = `標準35%:¥${Math.floor(wage*1.35)}`; if(hnh) hnh.textContent = `標準60%:¥${Math.floor(wage*1.60)}`;
+}
+function markEmpChanged(id){
+  const row=document.querySelector(`.emp-master-row[data-id="${id}"]`); if(!row)return; const emp=masterEmployees.find(e=>String(e.id)===String(id)); if(!emp)return;
+  emp.wage = Number(row.querySelector('[data-field="wage"]').value)||0;
+  emp.nightAllowance = Number(row.querySelector('[data-field="nightAllowance"]').value)||0;
+  emp.holidayAllowance = Number(row.querySelector('[data-field="holidayAllowance"]').value)||0;
+  emp.holidayNightAllowance= Number(row.querySelector('[data-field="holidayNightAllowance"]').value)||0;
+  empPendingChanges=empPendingChanges.filter(c=>!(c.action==='upsert'&&String(c.emp.id)===String(id)));
+  empPendingChanges.push({action:'upsert',emp:{...emp}}); document.getElementById('btn-save-emps').disabled=false; showAutoHint(id, emp.wage);
+}
+function deleteEmpLocally(id){
+  if(!confirm('この従業員を削除しますか？\n（GSSへの反映は「変更をGSSに保存」で行われます）'))return;
+  const emp=masterEmployees.find(e=>String(e.id)===String(id));
+  if(emp){
+    empPendingChanges=empPendingChanges.filter(c=>String(c.emp.id)!==String(id));
+    if(!emp._isNew) empPendingChanges.push({action:'delete',emp});
+    masterEmployees=masterEmployees.filter(e=>String(e.id)!==String(id)); renderEmpMaster(); document.getElementById('btn-save-emps').disabled=false;
+  }
+}
+function addNewEmployee(){
+  const name=document.getElementById('new-emp-name').value.trim(), wage=Number(document.getElementById('new-emp-wage').value)||0;
+  const night=Number(document.getElementById('new-emp-night').value)||Math.floor(wage*1.25), holiday=Number(document.getElementById('new-emp-holiday').value)||Math.floor(wage*1.35), hnight=Number(document.getElementById('new-emp-hnight').value)||Math.floor(wage*1.60);
+  if(!name){showToast('⚠️ 氏名を入力してください','error');return;}
+  if(masterEmployees.some(e=>e.name===name)){showToast('⚠️ 既に同名の従業員が登録されています','error');return;}
+  const newEmp={id:Date.now(),name,wage,nightAllowance:night,holidayAllowance:holiday,holidayNightAllowance:hnight,_isNew:true};
+  masterEmployees.push(newEmp); empPendingChanges.push({action:'upsert',emp:newEmp});
+  document.getElementById('emp-modal').classList.add('hidden'); renderEmpMaster(); document.getElementById('btn-save-emps').disabled=false; showToast(`✅ ${name}を追加しました。保存をお忘れなく`,'success');
+}
+async function saveEmployeesToGSS() {
+  const url=getGASUrl(); if(!url)return; const btn=document.getElementById('btn-save-emps');
+  btn.disabled=true; document.getElementById('emp-save-status').textContent='GSSにマスターを保存中...';
+  try {
+    const res=await fetch(url,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'saveMaster',changes:empPendingChanges})});
+    const json=await res.json(); if(json.status!=='ok') throw new Error(json.message);
+    showToast(`✅ 従業員マスターの変更をGSSに同期しました (${empPendingChanges.length}件)`,'success');
+    empPendingChanges=[]; await fetchEmployees();
+  } catch(e){showToast('❌ マスター同期失敗: '+e.message,'error'); btn.disabled=false; document.getElementById('emp-save-status').textContent='❌ 同期失敗';}
+}
+
+// ══════════════════════════════════════════════
+// ③ 給与計算 (時間帯による深夜分割対応版)
+// ══════════════════════════════════════════════
+async function fetchPayrollData() {
+  const url = getGASUrl(), from = document.getElementById('pay-from').value, to = document.getElementById('pay-to').value;
+  if (!url) { showToast('⚠️ GAS URLを入力してください', 'error'); return; }
+  if (!from || !to) { showToast('⚠️ 計算期間を設定してください', 'error'); return; }
+  if (from > to) { showToast('⚠️ 開始日が終了日より後です', 'error'); return; }
+  
+  const btn = document.getElementById('btn-pay-fetch'), pw = document.getElementById('pay-fetch-prog-wrap');
+  btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>取得中...'; pw.style.display = 'block';
+  document.getElementById('pay-fetch-prog').style.width = '10%';
+  document.getElementById('pay-data-preview').style.display = 'none';
+  document.getElementById('btn-calc').disabled = true; document.getElementById('btn-pay-csv').disabled = true;
+  document.getElementById('payroll-result').style.display = 'none';
+  
+  try {
+    document.getElementById('pay-fetch-status').textContent = '打刻データ取得中...';
+    const recRes = await fetch(`${url}?action=fetch&from=${from}&to=${to}`); const recJson = await recRes.json();
+    if (recJson.status !== 'ok') throw new Error('打刻データ取得失敗: ' + recJson.message);
+    payRecords = recJson.records || [];
+    document.getElementById('pay-fetch-prog').style.width = '40%';
+
+    document.getElementById('pay-fetch-status').textContent = '従業員マスター取得中...';
+    const empRes = await fetch(`${url}?action=fetchEmployees`); const empJson = await empRes.json();
+    if (empJson.status !== 'ok') throw new Error('従業員マスター取得失敗: ' + empJson.message);
+    const empList = empJson.employees || [];
+    payEmpMap = {};
+    empList.forEach(e => {
+      payEmpMap[e.name] = {
+        wage: e.wage || 0,
+        nightAllowance: e.nightAllowance || 0,
+        holidayAllowance: e.holidayAllowance || 0,
+        holidayNightAllowance: e.holidayNightAllowance || 0,
+      };
+    });
+    document.getElementById('pay-fetch-prog').style.width = '65%';
+
+    document.getElementById('pay-fetch-status').textContent = '祝日データ取得中...';
+    await ensureHolidays(from, to);
+    document.getElementById('pay-fetch-prog').style.width = '100%';
+    document.getElementById('pay-fetch-status').textContent = '取得完了';
+
+    const uniqueEmpsInRecs = [...new Set(payRecords.map(r => r.employeeName))];
+    document.getElementById('prev-rec-count').textContent = payRecords.length;
+    document.getElementById('prev-emp-count').textContent = uniqueEmpsInRecs.length;
+    document.getElementById('prev-master-count').textContent = empList.length;
+    
+    const yFrom = from.substring(0,4), yTo = to.substring(0,4);
+    let holCount = 0;
+    for(let y=yFrom; y<=yTo; y++) { if(holidayCache[y]) holCount += holidayCache[y].size; }
+    document.getElementById('prev-holiday-count').textContent = `${holCount} 日`;
+
+    const missing = uniqueEmpsInRecs.filter(n => !payEmpMap[n]);
+    const warn = document.getElementById('pay-data-warn');
+    if (missing.length) {
+      warn.innerHTML = `⚠️ マスターに未登録の従業員が打刻に存在します（時給0円計算になります）:<br>${missing.join(', ')}`;
+      warn.style.display = 'block';
+    } else {
+      warn.style.display = 'none';
+    }
+    
+    document.getElementById('pay-data-preview').style.display = 'block';
+    document.getElementById('btn-calc').disabled = false;
+    showToast('✅ 計算に必要なデータを取得しました。給与計算を実行してください。', 'success');
+  } catch (e) {
+    showToast('❌ データ取得失敗: ' + e.message, 'error');
+    document.getElementById('pay-fetch-status').textContent = '❌ エラー';
+  } finally {
+    btn.disabled = false; btn.innerHTML = 'GSSからデータ取得';
+    setTimeout(() => { pw.style.display = 'none'; }, 1200);
   }
 }
 
-function isHolidayOrSunday(dateStr) {
-  const d = new Date(dateStr + "T00:00:00");
-  if (d.getDay() === 0) return true; // 日曜日
-  const y = d.getFullYear();
-  if (holidayCache[y] && holidayCache[y].has(dateStr)) return true;
+function isHolidayOrWeekend(dateStr) {
+  if (!dateStr) return false;
+  const d = new Date(dateStr + 'T00:00:00'); const dow = d.getDay();
+  if (dow === 0 || dow === 6) return true; 
+  const year = dateStr.substring(0, 4);
+  if (holidayCache[year] && holidayCache[year].has(dateStr)) return true;
   return false;
 }
 
-// ══════════════════════════════════════════════
-//  給与計算 コアロジック
-// ══════════════════════════════════════════════
-async function fetchAndCalculate() {
-  if(!gasUrl) return showToast('先にGAS接続設定を行ってください', 'error');
-  const from = document.getElementById('fetch-from').value;
-  const to = document.getElementById('fetch-to').value;
-  if(!from || !to) return showToast('期間を正しく指定してください', 'error');
-
-  const btn = document.getElementById('btn-fetch');
-  btn.disabled = true;
-  btn.textContent = '⏳ 通信＆計算中...';
-
+async function ensureHolidays(from, to) {
+  const url = getGASUrl(); if (!url) return;
+  const fromYear = Number(from.substring(0, 4)), toYear = Number(to.substring(0, 4));
+  const years = [];
+  for (let y = fromYear; y <= toYear; y++) { if (!holidayCache[y]) years.push(y); }
+  if (!years.length) return;
   try {
-    // 期間内の必要年数から祝日キャッシュを確保
-    const startYear = new Date(from+"T00:00:00").getFullYear();
-    const endYear = new Date(to+"T00:00:00").getFullYear();
-    const targetYears = [];
-    for(let y=startYear; y<=endYear; y++) targetYears.push(y);
-    await ensureHolidayCache(targetYears);
-
-    // GASから打刻明細を取得
-    const res = await fetch(`${gasUrl}?action=fetch_records&from=${from}&to=${to}`);
-    const obj = await res.json();
-    if(obj.status !== 'success') {
-      showToast('データ取得エラー: ' + obj.message, 'error');
-      return;
-    }
-
-    fetchedRecords = obj.records || [];
-    renderRecordsTable();
-
-    // 給与集計ロジック実行
-    calculateSalary(from, to);
-
-  } catch(e) {
-    showToast('通信または計算中にエラーが発生しました', 'error');
-    console.error(e);
-  } finally {
-    btn.disabled = false;
-    btn.textContent = '📡 記録取得 & 集計実行';
+    const fetchFrom = `${fromYear}-01-01`, fetchTo = `${toYear}-12-31`;
+    const res = await fetch(`${url}?action=fetchHolidays&from=${fetchFrom}&to=${fetchTo}`); const json = await res.json();
+    if (json.status !== 'ok') throw new Error(json.message);
+    for (let y = fromYear; y <= toYear; y++) { holidayCache[y] = new Set(); }
+    (json.holidays || []).forEach(d => { const y = d.substring(0, 4); if (holidayCache[y]) holidayCache[y].add(d); });
+  } catch (err) {
+    console.warn('祝日取得失敗（土日判定のみで続行）:', err.message);
+    years.forEach(y => { holidayCache[y] = new Set(); });
   }
 }
 
-function renderRecordsTable() {
-  document.getElementById('record-count').textContent = fetchedRecords.length;
-  const tbody = document.getElementById('records-tbody');
-  tbody.innerHTML = '';
+function togglePayDetail(id) {
+  const row = document.getElementById(id);
+  const arrow = document.getElementById(id + '-arrow');
+  if (!row) return;
+  const isOpen = row.style.display !== 'none';
+  row.style.display = isOpen ? 'none' : '';
+  if (arrow) arrow.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(90deg)';
+}
 
-  if(fetchedRecords.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--muted);">指定期間に一致する打刻データはありませんでした。</td></tr>`;
+function calcPayroll() {
+  const from = document.getElementById('pay-from').value, to = document.getElementById('pay-to').value;
+  const transportFee = Number(document.getElementById('transport-fee').value) || 0;
+  if (!payRecords.length) { showToast('⚠️ 対象データがありません。期間を確認し再取得してください', 'error'); return; }
+
+  const emps = {};
+  
+  payRecords.forEach(r => {
+    if (r.punchType !== '退勤') return;
+    const name = r.employeeName; if (!name) return;
+    if (!emps[name]) {
+      emps[name] = { name, uniqueDays: new Set(), totalMin: 0, normalMin: 0, nightMin: 0, holidayMin: 0, holidayNightMin: 0, details: [] };
+    }
+    const e = emps[name];
+    const dayStr = r.date || (r.punchTime ? r.punchTime.substring(0, 10) : null);
+    if (dayStr) e.uniqueDays.add(dayStr);
+
+    const totalMinutes = Number(r.durationMinutes) || 0;
+    e.totalMin += totalMinutes;
+
+    // 対応する出勤レコードを検索
+    // ・退勤が翌日になるケース（日付跨ぎシフト）に対応するため日付一致ではなく時刻で検索
+    // ・durationMinutes < 0 の異常レコードを除外
+    // ・候補が複数ある場合は退勤時刻に最も近い（直前の）出勤を選択
+    const checkOutTime = r.punchTime ? new Date(r.punchTime.replace(' ', 'T')) : null;
+    const candidateIns = checkOutTime ? payRecords.filter(p => {
+      if (p.employeeName !== name || p.punchType !== '出勤' || p.shift !== r.shift) return false;
+      if (Number(p.durationMinutes) < 0) return false; // 異常値（負）を除外
+      if (!p.punchTime) return false;
+      const pt = new Date(p.punchTime.replace(' ', 'T'));
+      if (isNaN(pt.getTime())) return false;
+      const diff = checkOutTime - pt;
+      return diff > 0 && diff <= 24 * 60 * 60 * 1000; // 退勤より前かつ24時間以内
+    }) : [];
+    // 退勤時刻に最も近い（直前の）出勤レコードを選ぶ
+    const checkIn = candidateIns.length
+      ? candidateIns.reduce((best, p) => {
+          const pt = new Date(p.punchTime.replace(' ', 'T'));
+          const bt = new Date(best.punchTime.replace(' ', 'T'));
+          return pt > bt ? p : best;
+        })
+      : null;
+
+    let startStr = checkIn ? checkIn.punchTime : null;
+    let endStr = r.punchTime;
+
+    // 深夜時間（22:00〜05:00）の計算
+    // 方針：丸め後の出退勤時刻を基準に、深夜境界（22:00 / 翌05:00）で区間を直接分割する。
+    //       比率按分は使わない（durationMinutes と時刻差のズレを持ち込まないため）。
+    let nightMins = 0;
+
+    // 秒を切り捨てた Date を返すヘルパー
+    const toRoundedDate = str => {
+      if (!str) return null;
+      const d = new Date(str.replace(' ', 'T'));
+      if (isNaN(d.getTime())) return null;
+      d.setSeconds(0, 0);
+      return d;
+    };
+
+    // 開始時刻の決定（出勤打刻がない場合は退勤時刻から totalMinutes 分逆算）
+    let calcStart = toRoundedDate(startStr);
+    if (!calcStart && endStr) {
+      const endTmp = toRoundedDate(endStr);
+      if (endTmp && totalMinutes > 0) {
+        calcStart = new Date(endTmp.getTime() - totalMinutes * 60000);
+      }
+    }
+    const calcEnd = toRoundedDate(endStr);
+
+    if (calcStart && calcEnd && calcStart < calcEnd) {
+      // 深夜帯の境界（22:00〜翌05:00）をその日から翌日以降へと列挙し、重複区間を積算する
+      const NIGHT_START_H = 22;
+      const NIGHT_END_H   = 5;
+      let rawNight = 0;
+      let d = new Date(calcStart);
+      d.setHours(0, 0, 0, 0); // その日の 0:00 から走査開始
+
+      while (d < calcEnd) {
+        const ns = new Date(d); ns.setHours(NIGHT_START_H, 0, 0, 0);              // 当日 22:00
+        const ne = new Date(d); ne.setDate(ne.getDate() + 1); ne.setHours(NIGHT_END_H, 0, 0, 0); // 翌日 05:00
+
+        const overlapStart = Math.max(calcStart.getTime(), ns.getTime());
+        const overlapEnd   = Math.min(calcEnd.getTime(),   ne.getTime());
+        if (overlapEnd > overlapStart) {
+          rawNight += Math.round((overlapEnd - overlapStart) / 60000);
+        }
+        d.setDate(d.getDate() + 1);
+      }
+
+      nightMins = Math.min(rawNight, totalMinutes);
+    }
+
+    if (nightMins > totalMinutes) nightMins = totalMinutes;
+    if (nightMins < 0) nightMins = 0;
+    let dayMins = totalMinutes - nightMins;
+
+    // 休日と単価の判定
+    const isHol = isHolidayOrWeekend(dayStr);
+    const cfgTmp = payEmpMap[name] || { wage: 0, nightAllowance: 0, holidayAllowance: 0, holidayNightAllowance: 0 };
+
+    let dayRate = isHol ? cfgTmp.holidayAllowance : cfgTmp.wage;
+    let dayCategory = isHol ? '土日祝' : '通常';
+
+    let nightRate = isHol ? cfgTmp.holidayNightAllowance : cfgTmp.nightAllowance;
+    let nightCategory = isHol ? '土日祝深夜' : '深夜';
+
+    // 全体集計への加算
+    if (isHol) {
+      e.holidayMin += dayMins;
+      e.holidayNightMin += nightMins;
+    } else {
+      e.normalMin += dayMins;
+      e.nightMin += nightMins;
+    }
+
+    // 日別内訳への追加
+    let dayRecord = e.details.find(d => d.date === dayStr);
+    if (!dayRecord) {
+      dayRecord = { date: dayStr, isHoliday: isHol, shifts: [], totalMinutes: 0, totalPay: 0 };
+      e.details.push(dayRecord);
+    }
+
+    // 1つのシフトが昼と夜をまたぐ場合、UIの表示上は分割して描画するため2つのデータをpush
+    if (dayMins > 0 || totalMinutes === 0) {
+      dayRecord.shifts.push({
+        shiftDisplay: r.shift,
+        checkIn: startStr,
+        checkOut: endStr,
+        minutes: dayMins,
+        category: dayCategory,
+        rate: dayRate,
+        pay: Math.round(dayRate * dayMins / 60)
+      });
+    }
+    if (nightMins > 0) {
+      dayRecord.shifts.push({
+        shiftDisplay: (dayMins > 0) ? '' : r.shift,  // 昼も存在する場合は下段の表示を省略
+        checkIn: (dayMins > 0) ? '' : startStr,
+        checkOut: (dayMins > 0) ? '' : endStr,
+        minutes: nightMins,
+        category: nightCategory,
+        rate: nightRate,
+        pay: Math.round(nightRate * nightMins / 60)
+      });
+    }
+
+    dayRecord.totalMinutes += totalMinutes;
+    dayRecord.totalPay += Math.round(dayRate * dayMins / 60) + Math.round(nightRate * nightMins / 60);
+  });
+
+  payrollResults = Object.values(emps).map(e => {
+    const cfg = payEmpMap[e.name] || { wage: 0, nightAllowance: 0, holidayAllowance: 0, holidayNightAllowance: 0 };
+    const days = e.uniqueDays.size;
+
+    const basePay         = Math.round(cfg.wage * e.normalMin / 60);
+    const nightPay        = Math.round(cfg.nightAllowance * e.nightMin / 60);
+    const holidayPay      = Math.round(cfg.holidayAllowance * e.holidayMin / 60);
+    const holidayNightPay = Math.round(cfg.holidayNightAllowance * e.holidayNightMin / 60);
+
+    const wageTotal = basePay + nightPay + holidayPay + holidayNightPay;
+    const transport = transportFee * days;
+    const totalPay  = wageTotal + transport;
+
+    const sortedDetails = [...e.details].sort((a, b) => (a.date||'').localeCompare(b.date||''));
+    sortedDetails.forEach(d => {
+      // splitされたシフトが含まれるためcheckInでのソートはしないか、空白を考慮したソートにする
+      d.transport = transportFee;
+      d.dayTotal = d.totalPay + d.transport;
+    });
+
+    return { ...e, days, cfg, basePay, nightPay, holidayPay, holidayNightPay, wageTotal, transport, totalPay, details: sortedDetails };
+  }).sort((a, b) => a.name.localeCompare(b.name));
+
+  const total = payrollResults.reduce((s, r) => s + r.totalPay, 0);
+  document.getElementById('pay-sum-period').textContent = `${from} 〜 ${to}`;
+  document.getElementById('pay-sum-heads').textContent = `${payrollResults.length}名`;
+  document.getElementById('pay-sum-total').textContent = `¥${total.toLocaleString()}`;
+  document.getElementById('payroll-result').style.display = 'block';
+
+  const tbody = document.getElementById('pay-body');
+  if (!payrollResults.length) {
+    tbody.innerHTML = '<tr><td colspan="14" class="empty-msg">計算結果が空です。</td></tr>';
+    document.getElementById('btn-pay-csv').disabled = true;
     return;
   }
 
-  fetchedRecords.forEach(r => {
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td><b>${r.employeeName || ''}</b></td>
-      <td>${r.shift || ''}</td>
-      <td>${r.punchType || ''}</td>
-      <td class="mono">${r.date || ''}</td>
-      <td class="mono">${r.punchTime ? r.punchTime.substring(11,16) : ''}</td>
-      <td class="mono">${r.durationLabel || '-'}</td>
-    `;
-    tbody.appendChild(tr);
-  });
+  tbody.innerHTML = payrollResults.map((r, idx) => {
+    const safeId = `pay-detail-${idx}`;
+    return `<tr class="pay-summary-row" style="cursor:pointer;" onclick="togglePayDetail('${safeId}')">
+      <td><span class="pay-expand-arrow" id="${safeId}-arrow" style="display:inline-block;width:14px;transition:transform .15s;">▸</span><strong>${r.name}</strong></td>
+      <td class="mono" style="text-align:center;">${r.days}日</td>
+      <td class="mono" style="font-weight:700;color:var(--text);">${fmtMin(r.totalMin)}</td>
+      <td class="mono" style="color:var(--accent);">${fmtMin(r.normalMin)}</td>
+      <td class="mono" style="color:#8b9de8;">${fmtMin(r.nightMin)}</td>
+      <td class="mono" style="color:var(--gold);">${fmtMin(r.holidayMin)}</td>
+      <td class="mono" style="color:var(--amber);">${fmtMin(r.holidayNightMin)}</td>
+      <td class="mono" style="text-align:right;">¥${r.basePay.toLocaleString()}</td>
+      <td class="mono" style="text-align:right;">¥${r.nightPay.toLocaleString()}</td>
+      <td class="mono" style="text-align:right;">¥${r.holidayPay.toLocaleString()}</td>
+      <td class="mono" style="text-align:right;">¥${r.holidayNightPay.toLocaleString()}</td>
+      <td class="mono" style="text-align:right;font-weight:500;">¥${r.wageTotal.toLocaleString()}</td>
+      <td class="mono" style="text-align:right;color:var(--muted);">¥${r.transport.toLocaleString()}</td>
+      <td class="mono" style="text-align:right;font-weight:700;color:var(--gold);font-size:.85rem;">¥${r.totalPay.toLocaleString()}</td>
+    </tr>
+    <tr class="pay-detail-row" id="${safeId}" style="display:none;">
+      <td colspan="14" style="padding:0;background:var(--surface2);">
+        <div style="padding:14px 18px;">
+          <div style="font-size:.7rem;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px;">${r.name} の日別内訳（${r.details.length}日）</div>
+          <table style="width:100%;font-size:.8rem;">
+            <thead>
+              <tr style="color:var(--muted);font-size:.7rem;">
+                <th style="text-align:left;padding:4px 8px;">日付</th>
+                <th style="text-align:center;padding:4px 8px;">勤務種別</th>
+                <th style="text-align:center;padding:4px 8px;">出勤</th>
+                <th style="text-align:center;padding:4px 8px;">退勤</th>
+                <th style="text-align:right;padding:4px 8px;">勤務時間</th>
+                <th style="text-align:center;padding:4px 8px;">区分</th>
+                <th style="text-align:right;padding:4px 8px;">時給</th>
+                <th style="text-align:right;padding:4px 8px;">給与</th>
+                <th style="text-align:right;padding:4px 8px;">交通費</th>
+                <th style="text-align:right;padding:4px 8px;">日額合計</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${r.details.map(d => `
+                <tr style="border-top:1px solid var(--border);">
+                  <td class="mono" style="padding:5px 8px;vertical-align:top;">${d.date || '—'}${d.isHoliday ? ' <span style="color:var(--gold);font-size:.68rem;">(休)</span>' : ''}</td>
+                  
+                  <td style="text-align:center;padding:5px 8px;vertical-align:top;">${d.shifts.map(s => `<div style="margin-bottom:3px;">${s.shiftDisplay ? `<span class="badge ${s.shiftDisplay==='夜勤'?'badge-night':'badge-day'}" style="font-size:.68rem;">${s.shiftDisplay}</span>` : '<span style="color:transparent;">-</span>'}</div>`).join('')}</td>
+                  
+                  <td class="mono" style="text-align:center;padding:5px 8px;vertical-align:top;">${d.shifts.map(s => `<div style="margin-bottom:3px;">${s.checkIn === '' ? '<span style="color:transparent;">-</span>' : fmtTimeOnly(s.checkIn)}</div>`).join('')}</td>
+                  
+                  <td class="mono" style="text-align:center;padding:5px 8px;vertical-align:top;">${d.shifts.map(s => `<div style="margin-bottom:3px;">${s.checkOut === '' ? '<span style="color:transparent;">-</span>' : fmtTimeOnly(s.checkOut)}</div>`).join('')}</td>
+                  
+                  <td class="mono" style="text-align:right;padding:5px 8px;vertical-align:top;">${d.shifts.map(s => `<div style="margin-bottom:3px;">${fmtMin(s.minutes)}</div>`).join('')}<div style="font-weight:700;color:var(--text);border-top:1px dashed var(--border);margin-top:2px;padding-top:2px;">${fmtMin(d.totalMinutes)}</div></td>
+                  
+                  <td style="text-align:center;padding:5px 8px;vertical-align:top;color:var(--muted);font-size:.72rem;">${d.shifts.map(s => `<div style="margin-bottom:3px;">${s.category}</div>`).join('')}</td>
+                  
+                  <td class="mono" style="text-align:right;padding:5px 8px;vertical-align:top;color:var(--muted);">${d.shifts.map(s => `<div style="margin-bottom:3px;">¥${(s.rate||0).toLocaleString()}</div>`).join('')}</td>
+                  
+                  <td class="mono" style="text-align:right;padding:5px 8px;vertical-align:top;">${d.shifts.map(s => `<div style="margin-bottom:3px;">¥${s.pay.toLocaleString()}</div>`).join('')}<div style="font-weight:700;border-top:1px dashed var(--border);margin-top:2px;padding-top:2px;">¥${d.totalPay.toLocaleString()}</div></td>
+                  
+                  <td class="mono" style="text-align:right;padding:5px 8px;vertical-align:top;color:var(--muted);">¥${d.transport.toLocaleString()}</td>
+                  
+                  <td class="mono" style="text-align:right;padding:5px 8px;vertical-align:top;font-weight:600;color:var(--gold);">¥${d.dayTotal.toLocaleString()}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+
+  document.getElementById('btn-pay-csv').disabled = false;
+  showToast('📊 給与計算が完了しました（深夜時間分割適用済み）', 'success');
 }
 
-function calculateSalary(fromStr, toStr) {
-  // 従業員名 -> 日付セット (出勤日数カウント用)
-  const empActiveDays = {};
-  // 従業員名 -> 手当別の集計(分)
-  const empCalculations = {};
+function downloadPayCSV() {
+  if (!payrollResults.length) return;
+  const from = document.getElementById('pay-from').value, to = document.getElementById('pay-to').value;
+  const fee = document.getElementById('transport-fee').value;
+  const hdrs = [
+    '従業員名','出勤日数','総労働時間(分)','通常時間(分)','深夜時間(分)','土日祝時間(分)','土日祝深夜(分)',
+    '基本給(円)','深夜手当(円)','土日祝手当(円)','土日祝深夜手当(円)','給与小計(円)','交通費(円)','支給総額(円)'
+  ].join(',');
 
-  // 初期化
-  masterEmployees.forEach(m => {
-    empActiveDays[m.name] = new Set();
-    empCalculations[m.name] = { baseMin: 0, nightMin: 0, holMin: 0, holNightMin: 0 };
-  });
-
-  // レコード走査
-  fetchedRecords.forEach(r => {
-    const name = r.employeeName;
-    if (!empCalculations[name]) {
-      // マスターにいない従業員が打刻記録にあった場合のフォールバック枠
-      empActiveDays[name] = new Set();
-      empCalculations[name] = { baseMin: 0, nightMin: 0, holMin: 0, holNightMin: 0 };
-    }
-
-    if (r.date) empActiveDays[name].add(r.date);
-
-    // 退勤(丸め計算済みの勤務時間)のみ集計
-    if (r.punchType === '退勤' && r.durationMinutes) {
-      const mins = Number(r.durationMinutes);
-      const isHol = isHolidayOrSunday(r.date);
-
-      if (r.shift === '深夜勤務') {
-        if (isHol) {
-          empCalculations[name].holNightMin += mins;
-        } else {
-          empCalculations[name].nightMin += mins;
-        }
-      } else {
-        if (isHol) {
-          empCalculations[name].holMin += mins;
-        } else {
-          empCalculations[name].baseMin += mins;
-        }
-      }
-    }
-  });
-
-  // 金額計算
-  calculationResults = [];
-  Object.keys(empCalculations).forEach(name => {
-    const master = masterEmployees.find(m => m.name === name) || {
-      wage: 1000, nightAllowance: 250, holidayAllowance: 300, holidayNightAllowance: 550, transportStatus: '支給', transportFee: 0
-    };
-
-    const c = empCalculations[name];
-    const daysCount = empActiveDays[name].size;
-
-    // 各項目金額 (分単価換算、端数四捨五入)
-    const baseAmt     = Math.round(c.baseMin * (master.wage / 60));
-    const nightAmt    = Math.round(c.nightMin * ((master.wage + master.nightAllowance) / 60));
-    const holAmt      = Math.round(c.holMin * ((master.wage + master.holidayAllowance) / 60));
-    const holNightAmt = Math.round(c.holNightMin * ((master.wage + master.holidayNightAllowance) / 60));
-
-    // 【修正】マスターの交通費可否判定に基づき一律・個別の支給計算。非支給なら0
-    let transAmt = 0;
-    if (master.transportStatus !== '非支給') {
-      transAmt = daysCount * (master.transportFee || 0);
-    }
-
-    const totalHours = ((c.baseMin + c.nightMin + c.holMin + c.holNightMin) / 60).toFixed(2);
-    const totalSalary = baseAmt + nightAmt + holAmt + holNightAmt + transAmt;
-
-    calculationResults.push({
-      name,
-      daysCount,
-      totalHours,
-      baseAmt,
-      nightAmt,
-      holAmt,
-      holNightAmt,
-      transAmt,
-      totalSalary
-    });
-  });
-
-  renderCalcTable();
-}
-
-function renderCalcTable() {
-  const tbody = document.getElementById('calc-tbody');
-  tbody.innerHTML = '';
-  document.getElementById('calc-result-card').style.display = 'block';
-
-  calculationResults.forEach(res => {
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td><b>${res.name}</b></td>
-      <td class="mono">${res.daysCount}日</td>
-      <td class="mono">${res.totalHours}h</td>
-      <td class="mono">¥${res.baseAmt.toLocaleString()}</td>
-      <td class="mono">¥${res.nightAmt.toLocaleString()}</td>
-      <td class="mono">¥${res.holAmt.toLocaleString()}</td>
-      <td class="mono">¥${res.holNightAmt.toLocaleString()}</td>
-      <td class="mono">¥${res.transAmt.toLocaleString()}</td>
-      <td class="mono" style="color:var(--gold); font-weight:700;">¥${res.totalSalary.toLocaleString()}</td>
-    `;
-    tbody.appendChild(tr);
-  });
-  showToast('📊 給与計算を完了しました', 'success');
-}
-
-function downloadCSV() {
-  if(calculationResults.length === 0) return showToast('出力する計算結果がありません', 'error');
-  const from = document.getElementById('fetch-from').value;
-  const to = document.getElementById('fetch-to').value;
-
-  const hdrs = ['従業員名','出勤日数','総労働時間','基本給(円)','深夜手当込み(円)','休日手当込み(円)','休日深夜手当込み(円)','交通費支給額(円)','総支給額(円)'].join(',');
-  const rows = calculationResults.map(r => [
-    r.name, r.daysCount, r.totalHours, r.baseAmt, r.nightAmt, r.holAmt, r.holNightAmt, r.transAmt, r.totalSalary
+  const rows = payrollResults.map(r => [
+    r.name, r.days, r.totalMin, r.normalMin, r.nightMin, r.holidayMin, r.holidayNightMin,
+    r.basePay, r.nightPay, r.holidayPay, r.holidayNightPay,
+    r.wageTotal, r.transport, r.totalPay
   ].join(','));
 
   const fromYear = Number(from.substring(0,4)), toYear = Number(to.substring(0,4));
@@ -590,6 +1209,7 @@ function downloadCSV() {
 
   const csv = '\uFEFF' + [
     `# 給与計算結果 ${from}〜${to}`,
+    `# 交通費単価: ${fee}円/日`,
     ...holidayLines,
     hdrs,
     ...rows
@@ -612,27 +1232,26 @@ function downloadCSV() {
   if (savedUrl) {
     document.getElementById('att-gas-url').value = savedUrl;
     gasUrl = savedUrl;
-    updateConnectionBadge(true);
-    await loadMasterFromGAS();
-  } else {
-    updateConnectionBadge(false);
   }
-  
-  // 今月1日〜末日をデフォルト期間に設定
   const n = new Date();
-  const yf = n.getFullYear(), mf = String(n.getMonth() + 1).padStart(2, '0');
-  const lastDay = new Date(yf, n.getMonth() + 1, 0).getDate();
-  document.getElementById('fetch-from').value = `${yf}-${mf}-01`;
-  document.getElementById('fetch-to').value = `${yf}-${mf}-${String(lastDay).padStart(2, '0')}`;
-})();
+  setThisMonth('fetch-from', 'fetch-to');
+  setThisMonth('pay-from', 'pay-to');
 
-function showToast(msg, type = 'info') {
-  const el = document.getElementById('toast');
-  el.textContent = msg; 
-  el.className = 'show';
-  if(type === 'error') el.classList.add('error');
-  setTimeout(() => { el.className = ''; }, 3500);
-}
+  try {
+    const records = await getAllRecords();
+    if (records && records.length) {
+      fetchedRecords = records;
+      buildFilterOptions(); applyFilter();
+    }
+    const emps = await getAllEmpsRaw();
+    if (emps && emps.length) {
+      masterEmployees = emps;
+      renderEmpMaster();
+    }
+  } catch (e) {
+    console.error('ローカルデータ読込失敗:', e);
+  }
+})();
 </script>
 </body>
 </html>
