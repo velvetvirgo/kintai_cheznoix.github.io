@@ -561,7 +561,7 @@ function getGASUrl() {
 async function pingGAS() {
   const url=getGASUrl(); if(!url){showToast('⚠️ GAS URLを入力してください','error');return;}
   try {
-    const r=await fetch(`${url}?action=ping`); const j=await r.json();
+    const r=await fetch(`${url}?action=ping`, {redirect:'follow'}); const j=await r.json();
     showToast(j.status==='ok'?'✅ 接続成功':'⚠️ '+j.message,j.status==='ok'?'success':'error');
   } catch(e){showToast('❌ 接続失敗: '+e.message,'error');}
 }
@@ -578,7 +578,7 @@ async function fetchAttendance() {
   btn.disabled=true; btn.innerHTML='<span class="spinner"></span>取得中...'; pw.style.display='block';
   document.getElementById('fetch-prog').style.width='30%';
   try {
-    const res=await fetch(`${url}?action=fetch&from=${from}&to=${to}`);
+    const res=await fetch(`${url}?action=fetch&from=${from}&to=${to}`, {redirect:'follow'});
     document.getElementById('fetch-prog').style.width='70%';
     const json=await res.json(); if(json.status!=='ok') throw new Error(json.message);
     fetchedRecords=(json.records||[]).map(r=>({...r,synced:1})); pendingChanges=[];
@@ -645,11 +645,11 @@ async function sendChanges() {
     const ups=pendingChanges.filter(c=>c.action==='upsert').map(c=>c.record);
     const dels=pendingChanges.filter(c=>c.action==='delete').map(c=>c.record.id);
     if(ups.length){
-      const r=await fetch(url,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'upsert',records:ups})});
+      const r=await fetch(url,{method:'POST',headers:{'Content-Type':'text/plain'},redirect:'follow',body:JSON.stringify({action:'upsert',records:ups})});
       const j=await r.json(); if(j.status!=='ok')throw new Error(j.message);
     }
     if(dels.length){
-      const r=await fetch(url,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'delete',ids:dels})});
+      const r=await fetch(url,{method:'POST',headers:{'Content-Type':'text/plain'},redirect:'follow',body:JSON.stringify({action:'delete',ids:dels})});
       const j=await r.json(); if(j.status!=='ok')throw new Error(j.message);
     }
     for(const r of ups){ await upsertRecord({...r,synced:1}); const fr=fetchedRecords.find(x=>x.id===r.id); if(fr) fr.synced=1; }
@@ -739,7 +739,7 @@ function downloadCSVFromList(list,fileName){
 async function fetchEmployees() {
   const url=getGASUrl(); if(!url){showToast('⚠️ GAS URLを入力してください','error');return;}
   try {
-    const res=await fetch(`${url}?action=fetchEmployees`); const json=await res.json();
+    const res=await fetch(`${url}?action=fetchEmployees`, {redirect:'follow'}); const json=await res.json();
     if(json.status!=='ok') throw new Error(json.message);
     masterEmployees=json.employees||[]; empPendingChanges=[];
     const store=db.transaction('employees','readwrite').objectStore('employees');
@@ -817,7 +817,7 @@ async function saveEmployeesToGSS() {
   const url=getGASUrl(); if(!url)return; const btn=document.getElementById('btn-save-emps');
   btn.disabled=true; document.getElementById('emp-save-status').textContent='GSSにマスターを保存中...';
   try {
-    const res=await fetch(url,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'saveMaster',changes:empPendingChanges})});
+    const res=await fetch(url,{method:'POST',headers:{'Content-Type':'text/plain'},redirect:'follow',body:JSON.stringify({action:'saveMaster',changes:empPendingChanges})});
     const json=await res.json(); if(json.status!=='ok') throw new Error(json.message);
     showToast(`✅ 従業員マスターの変更をGSSに同期しました (${empPendingChanges.length}件)`,'success');
     empPendingChanges=[]; await fetchEmployees();
@@ -842,13 +842,13 @@ async function fetchPayrollData() {
   
   try {
     document.getElementById('pay-fetch-status').textContent = '打刻データ取得中...';
-    const recRes = await fetch(`${url}?action=fetch&from=${from}&to=${to}`); const recJson = await recRes.json();
+    const recRes = await fetch(`${url}?action=fetch&from=${from}&to=${to}`, {redirect:'follow'}); const recJson = await recRes.json();
     if (recJson.status !== 'ok') throw new Error('打刻データ取得失敗: ' + recJson.message);
     payRecords = recJson.records || [];
     document.getElementById('pay-fetch-prog').style.width = '40%';
 
     document.getElementById('pay-fetch-status').textContent = '従業員マスター取得中...';
-    const empRes = await fetch(`${url}?action=fetchEmployees`); const empJson = await empRes.json();
+    const empRes = await fetch(`${url}?action=fetchEmployees`, {redirect:'follow'}); const empJson = await empRes.json();
     if (empJson.status !== 'ok') throw new Error('従業員マスター取得失敗: ' + empJson.message);
     const empList = empJson.employees || [];
     payEmpMap = {};
@@ -916,7 +916,7 @@ async function ensureHolidays(from, to) {
   if (!years.length) return;
   try {
     const fetchFrom = `${fromYear}-01-01`, fetchTo = `${toYear}-12-31`;
-    const res = await fetch(`${url}?action=fetchHolidays&from=${fetchFrom}&to=${fetchTo}`); const json = await res.json();
+    const res = await fetch(`${url}?action=fetchHolidays&from=${fetchFrom}&to=${fetchTo}`, {redirect:'follow'}); const json = await res.json();
     if (json.status !== 'ok') throw new Error(json.message);
     for (let y = fromYear; y <= toYear; y++) { holidayCache[y] = new Set(); }
     (json.holidays || []).forEach(d => { const y = d.substring(0, 4); if (holidayCache[y]) holidayCache[y].add(d); });

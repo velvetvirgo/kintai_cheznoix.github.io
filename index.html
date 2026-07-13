@@ -513,7 +513,7 @@ async function loadEmployees() {
   const gasUrl = localStorage.getItem('gasUrl') || '';
   if (gasUrl && navigator.onLine) {
     try {
-      const res  = await fetch(`${gasUrl}?action=fetchEmployees`);
+      const res  = await fetch(`${gasUrl}?action=fetchEmployees`, {redirect:'follow'});
       const json = await res.json();
       if (json.status === 'ok' && json.employees) {
         await clearEmployees();
@@ -765,7 +765,7 @@ async function syncData() {
     }));
 
     const res  = await fetch(gasUrl, {
-      method: 'POST', headers: { 'Content-Type': 'text/plain' },
+      method: 'POST', headers: { 'Content-Type': 'text/plain' }, redirect: 'follow',
       body: JSON.stringify({ action: 'upsert', records: payload }),
     });
     const json = await res.json();
